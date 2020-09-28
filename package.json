@@ -1,14 +1,18 @@
 {
-  "name": "atombomb",
+  "name": "Atom Bomb",
   "version": "0.0.1",
-  "private": true,
+  "private": false,
   "description": "New Swagger API Project",
   "keywords": [],
   "author": "",
   "license": "",
   "main": "app.js",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.12.3",
+    "pg": "^8.3.3",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5",
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {
