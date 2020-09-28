@@ -1,7 +1,6 @@
 'use strict';
 
 const bcrypt = require('bcryptjs');
-require('dotenv').config();
 
 module.exports = (sequelize, DataTypes) => {
 	const User = sequelize.define('User', {
