@@ -70,9 +70,9 @@ paths:
           schema:
             type: object
             required:
-              - email
+              - token
             properties:
-              email:
+              token:
                 type: string
         default:
           description: Error
