@@ -5,10 +5,6 @@ require('dotenv').config();
 
 module.exports = (sequelize, DataTypes) => {
 	const User = sequelize.define('User', {
-		name: {
-			type: DataTypes.STRING,
-			required: true
-		},
 		email: {
 			type: DataTypes.STRING,
 			required: true
@@ -20,18 +16,15 @@ module.exports = (sequelize, DataTypes) => {
 	}, {
 		hooks: {
 			beforeCreate: (user) => {
-				const salt = bcrypt.genSaltSync(process.env.SALT_ROUNDS);
+				const salt = bcrypt.genSaltSync(parseInt(process.env.SALT_ROUNDS));
 				user.password = bcrypt.hashSync(user.password, salt);
-			}
-		},
-		instanceMethods: {
-			validPassword(password) {
-				return bcrypt.compare(password, this.password)
 			}
 		}
 	});
 	User.associate = function(models) {
 		// associations can be defined here
 	};
+
+	User.prototype.validPassword = (givenPassword, userPassword) => bcrypt.compare(givenPassword, userPassword);
 	return User;
 };

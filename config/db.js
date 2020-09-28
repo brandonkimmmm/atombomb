@@ -3,9 +3,10 @@ require('dotenv').config();
 module.exports = {
 	'development': {
 		'username': 'postgres',
-		'password': null,
+		'password': 'postgres',
 		'database': 'atombomb-dev',
-		'host': process.env.DEV_DATABASE_URL,
+		'host': '127.0.0.1',
+		'port': 5432,
 		'dialect': 'postgres',
 		'operatorsAliases': false
 	},
