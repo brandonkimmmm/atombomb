@@ -2,9 +2,16 @@
 
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
+const morgan = require('morgan');
+const { logEntryRequest, stream, logger } = require('./config/logger');
 module.exports = app; // for testing
 
 require('dotenv').config();
+
+app.use(logEntryRequest);
+
+const morganType = process.env.NODE_ENV === 'development' ? 'dev' : 'combined';
+app.use(morgan(morganType, { stream }));
 
 var config = {
   appRoot: __dirname // required config
@@ -19,7 +26,5 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 	var port = process.env.PORT || 10010;
 	app.listen(port);
 
-	if (swaggerExpress.runner.swagger.paths['/hello']) {
-		console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
-	}
+	logger.info(`Server running on port ${port}`);
 });

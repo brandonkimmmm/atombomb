@@ -1,6 +1,6 @@
 'use strict';
 
-const { User } = require('../../database/models');
+const { User } = require('../../db/models');
 
 const findUserByEmail = (email) => {
 	return User.findOne({

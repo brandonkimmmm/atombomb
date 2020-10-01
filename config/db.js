@@ -1,6 +1,11 @@
 
 'use strict';
 
+const { loggerDb } = require('../config/logger');
+const logging = (sql) => {
+	loggerDb.debug(sql);
+};
+
 module.exports = {
 	'development': {
 		'username': 'postgres',
@@ -9,7 +14,8 @@ module.exports = {
 		'host': '127.0.0.1',
 		'port': 5432,
 		'dialect': 'postgres',
-		'operatorsAliases': false
+		'operatorsAliases': false,
+		logging
 	},
 	'test': {
 		'username': 'postgres',
@@ -17,7 +23,8 @@ module.exports = {
 		'database': 'database_test',
 		'host': process.env.TEST_DATABASE_URL,
 		'dialect': 'mysql',
-		'operatorsAliases': false
+		'operatorsAliases': false,
+		logging
 	},
 	'production': {
 		'username': 'postgres',
@@ -25,6 +32,7 @@ module.exports = {
 		'database': 'database_production',
 		'host': process.env.DATABASE_URL,
 		'dialect': 'mysql',
-		'operatorsAliases': false
+		'operatorsAliases': false,
+		logging
 	}
 };
