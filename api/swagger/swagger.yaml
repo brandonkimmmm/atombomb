@@ -121,6 +121,7 @@ paths:
           schema:
             $ref: "#/definitions/MessageResponse"
   /task:
+    x-swagger-router-controller: task
     post:
       description: Create a new task
       operationId: createTask

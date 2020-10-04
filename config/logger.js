@@ -61,7 +61,8 @@ const LOGGER_NAMES = {
 	db: 'db',
 	api: 'api',
 	user: 'user',
-	auth: 'auth'
+	auth: 'auth',
+	task: 'task'
 };
 
 winston.loggers.add('default', generateLoggerConfiguration('all', false));
@@ -101,5 +102,6 @@ module.exports = {
 	loggerDb: winston.loggers.get(LOGGER_NAMES.db),
 	loggerApi: winston.loggers.get(LOGGER_NAMES.api),
 	loggerUser: winston.loggers.get(LOGGER_NAMES.user),
-	loggerAuth: winston.loggers.get(LOGGER_NAMES.auth)
+	loggerAuth: winston.loggers.get(LOGGER_NAMES.auth),
+	loggerTask: winston.loggers.get(LOGGER_NAMES.task)
 };
