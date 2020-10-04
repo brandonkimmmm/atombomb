@@ -130,39 +130,12 @@ paths:
           description: New task body
           required: true
           schema:
-            type: object
-            required:
-              - title
-              - description
-              - deadline
-            properties:
-              title:
-                type: string
-              description:
-                type: string
-              deadline:
-                type: string
-                format: date-time
+            $ref: "#/definitions/TaskObject"
       responses:
         201:
           description: Success
           schema:
-            type: object
-            required:
-              - title
-              - description
-              - deadline
-              - email
-            properties:
-              title:
-                type: string
-              description:
-                type: string
-              deadline:
-                type: string
-                format: date-time
-              email:
-                type: string
+            $ref: "#/definitions/TaskObject"
         default:
           description: Error
           schema:
@@ -177,8 +150,23 @@ definitions:
       message:
         type: string
   MessageResponse:
+    type: object
     required:
       - message
     properties:
       message:
         type: string
+  TaskObject:
+    type: object
+    required:
+      - title
+      - description
+      - deadline
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      deadline:
+        type: string
+        format: date-time
