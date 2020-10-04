@@ -10,7 +10,7 @@ const createTask = (req, res) => {
 
 	loggerTask.info('controllers/task/createTask body', title, deadline);
 
-	Task.findAll({
+	Task.findOne({
 		where: {
 			title,
 			description,
