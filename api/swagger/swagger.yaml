@@ -124,6 +124,49 @@ paths:
     post:
       description: Create a new task
       operationId: createTask
+      parameters:
+        - name: data
+          in: body
+          description: New task body
+          required: true
+          schema:
+            type: object
+            required:
+              - title
+              - description
+              - deadline
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              deadline:
+                type: string
+                format: date-time
+      responses:
+        201:
+          description: Success
+          schema:
+            type: object
+            required:
+              - title
+              - description
+              - deadline
+              - email
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              deadline:
+                type: string
+                format: date-time
+              email:
+                type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
 
 # complex objects have schema definitions
 definitions:

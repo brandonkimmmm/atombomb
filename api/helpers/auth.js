@@ -22,7 +22,7 @@ const issueToken = (id, email) => {
 const validateToken = (req, securityDescription, token, cb) => {
 	const sendError = (msg) => {
 		loggerAuth.error('helpers/token/validateToken err', msg);
-		return req.res.status(400).json({ message: `Access Denied: ${msg}` });
+		return req.res.status(401).json({ message: `Access Denied: ${msg}` });
 	};
 
 	if (token && token.indexOf('Bearer ') == 0) {
