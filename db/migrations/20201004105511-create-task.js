@@ -20,6 +20,10 @@ module.exports = {
 				type: Sequelize.DATE,
 				required: true
 			},
+			userId: {
+				type: Sequelize.INTEGER,
+				required: true
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE

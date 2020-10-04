@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
 		deadline: {
 			type: DataTypes.DATE,
 			required: true
+		},
+		userId: {
+			type: DataTypes.INTEGER,
+			required: true
 		}
 	}, {});
 	Task.associate = function(models) {
