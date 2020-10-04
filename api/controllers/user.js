@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { findUserByEmail } = require('../helpers/user');
 const { User } = require('../../db/models');
 const { loggerUser } = require('../../config/logger');
+const { issueToken } = require('../helpers/auth');
 
 const createUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
@@ -36,10 +37,7 @@ const loginUser = (req, res) => {
 			if (!await user.validPassword(password, user.password)) throw new Error('Invalid password');
 			loggerUser.info('controller/user/loginUser user login', user.email);
 			return res.json({
-				token: jwt.sign({
-					id: user.id,
-					email: user.email
-				}, 'nahnah', { expiresIn: '24h' })
+				token: issueToken(user.id, user.email)
 			});
 		})
 		.catch((err) => {

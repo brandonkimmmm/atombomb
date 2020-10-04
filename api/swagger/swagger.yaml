@@ -17,6 +17,14 @@ consumes:
 # format of the responses to the client (Accepts)
 produces:
   - application/json
+
+securityDefinitions:
+  Bearer:
+    description: JWT authentication
+    type: apiKey
+    name: Authorization
+    in: header
+
 paths:
   /hello:
     # binds a127 app logic to a route
@@ -112,6 +120,10 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/MessageResponse"
+  /task:
+    post:
+      description: Create a new task
+      operationId: createTask
 
 # complex objects have schema definitions
 definitions:
