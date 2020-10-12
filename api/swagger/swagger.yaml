@@ -17,6 +17,7 @@ consumes:
 # format of the responses to the client (Accepts)
 produces:
   - application/json
+  - text/html
 
 securityDefinitions:
   Bearer:
@@ -133,6 +134,34 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
+  /twitter/connect:
+    x-swagger-router-controller: twitter
+    get:
+      description: Connect your twitter account
+      operationId: getRequestToken
+      responses:
+        302:
+          description: 302 response
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
+  /twitter/callback:
+    x-swagger-router-controller: twitter
+    get:
+      description: Get access token
+      operationId: getAccessToken
+      responses:
+        302:
+          description: 302 response
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
 
 # complex objects have schema definitions
 definitions:

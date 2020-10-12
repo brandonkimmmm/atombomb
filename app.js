@@ -8,8 +8,6 @@ const { validateToken } = require('./api/helpers/auth');
 
 module.exports = app; // for testing
 
-require('dotenv').config();
-
 app.use(logEntryRequest);
 
 const morganType = process.env.NODE_ENV === 'development' ? 'dev' : 'combined';
