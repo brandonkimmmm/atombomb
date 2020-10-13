@@ -4,7 +4,7 @@ const { promisifyAll } = require('bluebird');
 const redis = require('redis');
 // const config = require('../config/redis');
 const { loggerRedis } = require('../config/logger');
-const { REDIS_HOST, REDIS_PORT } = require('../../constants');
+const { REDIS_HOST, REDIS_PORT } = require('../constants');
 
 promisifyAll(redis.RedisClient.prototype);
 promisifyAll(redis.Multi.prototype);
