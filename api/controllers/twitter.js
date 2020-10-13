@@ -36,7 +36,7 @@ const getRequestToken = (req, res) => {
 			return res.redirect(`https://twitter.com/oauth/authorize?oauth_token=${oauthRequestToken}`);
 		})
 		.catch((err) => {
-			loggerTwitter.error('controllers/twitter/getRequestToken', err.message || 'Something went wrong');
+			loggerTwitter.error(req.uuid, 'controllers/twitter/getRequestToken', err.message || 'Something went wrong');
 			return res.status(err.statusCode || 400).json({ message: err.message || 'Something went wrong' });
 		});
 };
@@ -44,6 +44,8 @@ const getRequestToken = (req, res) => {
 
 const getAccessToken = (req, res) => {
 	const { oauth_verifier, oauth_token } = req.swagger.params.oauth_verifier.value;
+
+	loggerTwitter.verbose(req.uuid, 'controllers/twitter/getAccessToken verifier', oauth_verifier);
 
 	redis.hgetAsync(TWITTER_OAUTH_KEY, oauth_token)
 		.then((requestData) => {
@@ -75,7 +77,7 @@ const getAccessToken = (req, res) => {
 			return res.redirect('http://127.0.0.1:3000?alert=Twitter&Verified');
 		})
 		.catch((err) => {
-			loggerTwitter.error('controllers/twitter/getAccessToken', err.message || 'Something went wrong');
+			loggerTwitter.error(req.uuid, 'controllers/twitter/getAccessToken', err.message || 'Something went wrong');
 			return res.status(err.statusCode || 400).json({ message: err.message || 'Something went wrong' });
 		});
 };
