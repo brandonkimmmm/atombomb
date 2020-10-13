@@ -62,7 +62,9 @@ const LOGGER_NAMES = {
 	api: 'api',
 	user: 'user',
 	auth: 'auth',
-	task: 'task'
+	task: 'task',
+	twitter: 'twitter',
+	redis: 'redis'
 };
 
 winston.loggers.add('default', generateLoggerConfiguration('all', false));
@@ -103,5 +105,7 @@ module.exports = {
 	loggerApi: winston.loggers.get(LOGGER_NAMES.api),
 	loggerUser: winston.loggers.get(LOGGER_NAMES.user),
 	loggerAuth: winston.loggers.get(LOGGER_NAMES.auth),
-	loggerTask: winston.loggers.get(LOGGER_NAMES.task)
+	loggerTask: winston.loggers.get(LOGGER_NAMES.task),
+	loggerTwitter: winston.loggers.get(LOGGER_NAMES.twitter),
+	loggerRedis: winston.loggers.get(LOGGER_NAMES.redis)
 };
