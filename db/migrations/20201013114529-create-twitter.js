@@ -17,12 +17,10 @@ module.exports = {
 			required: true
 		},
 		acccessToken: {
-			type: Sequelize.STRING,
-			required: true
+			type: Sequelize.STRING
 		},
 		twitterId: {
-			type: Sequelize.INTEGER,
-			required: true
+			type: Sequelize.INTEGER
 		},
 		createdAt: {
 			allowNull: false,

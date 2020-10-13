@@ -15,16 +15,13 @@ module.exports = (sequelize, DataTypes) => {
 			required: true
 		},
 		acccessToken: {
-			type: DataTypes.STRING,
-			required: true
+			type: DataTypes.STRING
 		},
 		accessTokenSecret: {
-			type: DataTypes.STRING,
-			required: true
+			type: DataTypes.STRING
 		},
 		twitterId: {
-			type: DataTypes.INTEGER,
-			required: true
+			type: DataTypes.INTEGER
 		}
 	}, {
 		hooks: {
