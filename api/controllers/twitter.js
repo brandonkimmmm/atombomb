@@ -5,7 +5,7 @@ const { twitterOauth } = require('../../utils/oauth');
 const { loggerTwitter } = require('../../config/logger');
 const redis = require('../../db/redis');
 const { TWITTER_OAUTH_KEY } = require('../../constants');
-const { Twitter, sequelize } = require('../../db/models');
+const { Twitter } = require('../../db/models');
 const { all } = require('bluebird');
 
 const getRequestToken = (req, res) => {
