@@ -2,6 +2,7 @@
 
 const OAuth = require('oauth');
 const { TWITTER_API_KEY, TWITTER_API_SECRET } = require('../constants');
+const { promisifyAll } = require('bluebird');
 
 const twitterOauth = new OAuth.OAuth(
 	'https://twitter.com/oauth/request_token',
@@ -12,6 +13,8 @@ const twitterOauth = new OAuth.OAuth(
 	'http://127.0.0.1:10010/twitter/callback',
 	'HMAC-SHA1'
 );
+
+promisifyAll(twitterOauth, { multiArgs: true });
 
 module.exports = {
 	twitterOauth
