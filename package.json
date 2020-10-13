@@ -1,38 +1,38 @@
 {
-  "name": "AtomBomb",
-  "version": "0.0.1",
-  "private": false,
-  "description": "New Swagger API Project",
-  "keywords": [],
-  "author": "",
-  "license": "",
-  "main": "app.js",
-  "dependencies": {
-    "axios": "0.20.0",
-    "bcryptjs": "2.4.3",
-    "bluebird": "3.7.2",
-    "cryptr": "6.0.2",
-    "dotenv": "8.2.0",
-    "express": "4.12.3",
-    "jsonwebtoken": "8.5.1",
-    "lodash": "4.17.20",
-    "morgan": "1.10.0",
-    "oauth": "0.9.15",
-    "pg": "8.3.3",
-    "pg-hstore": "2.3.3",
-    "redis": "3.0.2",
-    "sequelize": "6.3.5",
-    "swagger-express-mw": "0.1.0",
-    "uuid": "8.3.0",
-    "winston": "3.3.3"
-  },
-  "devDependencies": {
-    "eslint": "7.10.0",
-    "should": "7.1.0",
-    "supertest": "1.0.0"
-  },
-  "scripts": {
-    "start": "node app.js",
-    "test": "swagger project test"
-  }
+	"name": "atombomb",
+	"version": "0.0.1",
+	"private": false,
+	"description": "New Swagger API Project",
+	"keywords": [],
+	"author": "",
+	"license": "",
+	"main": "app.js",
+	"dependencies": {
+		"axios": "0.20.0",
+		"bcryptjs": "2.4.3",
+		"bluebird": "3.7.2",
+		"cryptr": "6.0.2",
+		"dotenv": "8.2.0",
+		"express": "4.12.3",
+		"jsonwebtoken": "8.5.1",
+		"lodash": "4.17.20",
+		"morgan": "1.10.0",
+		"oauth": "0.9.15",
+		"pg": "8.3.3",
+		"pg-hstore": "2.3.3",
+		"redis": "3.0.2",
+		"sequelize": "6.3.5",
+		"swagger-express-mw": "0.1.0",
+		"uuid": "8.3.0",
+		"winston": "3.3.3"
+	},
+	"devDependencies": {
+		"eslint": "7.10.0",
+		"should": "7.1.0",
+		"supertest": "1.0.0"
+	},
+	"scripts": {
+		"start": "node app.js",
+		"test": "swagger project test"
+	}
 }
