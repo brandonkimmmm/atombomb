@@ -24,6 +24,7 @@ const getRequestToken = (req, res) => {
 		}
 		storedOauthToken = oauthToken;
 		storedOauthTokenSecret = oauthTokenSecret;
+		console.log(oauthToken, oauthTokenSecret);
 		return res.redirect(`https://twitter.com/oauth/authorize?oauth_token=${oauthToken}`);
 	});
 };

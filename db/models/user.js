@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 	User.associate = function(models) {
 		// associations can be defined here
 		User.hasMany(models.Task, { foreignKey: 'userId' });
+		User.hasOne(models.Twitter, { foreignKey: 'userId' });
 	};
 
 	User.prototype.validPassword = (givenPassword, userPassword) => bcrypt.compare(givenPassword, userPassword);

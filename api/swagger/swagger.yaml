@@ -153,6 +153,15 @@ paths:
     get:
       description: Get access token
       operationId: getAccessToken
+      parameters:
+        - name: oauth_token
+          in: query
+          type: string
+          required: true
+        - name: oauth_verifier
+          in: query
+          type: string
+          required: true
       responses:
         302:
           description: 302 response
