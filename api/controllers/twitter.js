@@ -2,25 +2,55 @@
 
 const { twitterOauth } = require('../../utils/oauth');
 const { loggerTwitter } = require('../../config/logger');
-
-let storedOauthToken;
-let storedOauthTokenSecret;
+const redis = require('../../db/redis');
+const { TWITTER_OAUTH_KEY } = require('../../constants');
+const { Twitter, sequelize } = require('../../db/models');
+const { all } = require('bluebird');
 
 const getRequestToken = (req, res) => {
-	twitterOauth.getOAuthRequestToken((err, oauthToken, oauthTokenSecret, results) => {
-		if (err) {
+	loggerTwitter.verbose(req.uuid, 'controllers/twitter/getRequestToken auth', req.auth.sub);
+
+	const { id } = req.auth.sub;
+	const { username } = req.swagger.params.username.value;
+
+	sequelize.transaction((transaction) => {
+		return Twitter.create({
+			userId: id,
+			username
+		}, { transaction })
+			.then(() => {
+				return twitterOauth.getOAuthRequestTokenAsync();
+			})
+			.then(([
+				oauthRequestToken,
+				oauthRequestTokenSecret,
+				{ oauth_callback_confired }
+			]) => {
+				if (!oauth_callback_confired) {
+					throw new Error('OAuth callback not confirmed');
+				}
+				const oauthRequestData = JSON.stringify({
+					oauthRequestToken,
+					oauthRequestTokenSecret
+				});
+				return all([
+					oauthRequestToken,
+					redis.hsetAsync(TWITTER_OAUTH_KEY, username, oauthRequestData)
+				]);
+			});
+	})
+		.then(([ oauthRequestToken ]) => {
+			return res.redirect(`https://twitter.com/oauth/authorize?oauth_token=${oauthRequestToken}`);
+		})
+		.catch((err) => {
 			loggerTwitter.error('controllers/twitter/getRequestToken', 'Something went wrong');
-			return res.status(err.statusCode || 400).json({ message: 'Something went wrong' });
-		}
-		storedOauthToken = oauthToken;
-		storedOauthTokenSecret = oauthTokenSecret;
-		console.log(oauthToken, oauthTokenSecret);
-		loggerTwitter.info('controllers/twitter/getRequestToken');
-		return res.redirect(`https://twitter.com/oauth/authorize?oauth_token=${oauthToken}`);
-	});
+			return res.status(err.statusCode || 400).json({ message: err.message || 'Something went wrong' });
+		});
 };
 
+
 const getAccessToken = (req, res) => {
+
 
 	twitterOauth.getOAuthAccessToken(
 		storedOauthToken,

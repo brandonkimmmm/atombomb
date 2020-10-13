@@ -139,6 +139,12 @@ paths:
     get:
       description: Connect your twitter account
       operationId: getRequestToken
+      parameters:
+        - name: username
+          in: query
+          required: true
+          type: string
+          description: Twitter username
       responses:
         302:
           description: 302 response
@@ -148,6 +154,8 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/MessageResponse"
+      security:
+        - Bearer: []
   /twitter/callback:
     x-swagger-router-controller: twitter
     get:
