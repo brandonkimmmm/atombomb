@@ -112,8 +112,8 @@ paths:
           schema:
             $ref: "#/definitions/MessageResponse"
   /task:
+    x-swagger-router-controller: task
     get:
-      x-swagger-router-controller: task
       operationId: getTask
       parameters:
         - name: id
