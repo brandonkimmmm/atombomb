@@ -122,7 +122,7 @@ paths:
           type: number
           format: int32
       responses:
-        201:
+        200:
           description: Success
           schema:
             $ref: "#/definitions/TaskObject"
@@ -153,14 +153,26 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
-    put:
-      description: Update a task deadline
-      operationId: putTask
+    delete:
+      description: Delete a task
+      operationId: deleteTask
       parameters:
         - name: id
           in: query
           required: true
-
+          type: number
+          format: int32
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/MessageResponse"
+      default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
+      security:
+        - Bearer: []
   /twitter/connect:
     x-swagger-router-controller: twitter
     get:

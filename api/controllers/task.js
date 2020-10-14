@@ -32,7 +32,6 @@ const postTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/postTask auth', req.auth);
 
 	const { title, description, deadline } = req.swagger.params.data.value;
-
 	loggerTask.info(req.uuid, 'controllers/task/postTask body', title, deadline);
 
 	findTask({
@@ -62,7 +61,36 @@ const postTask = (req, res) => {
 		});
 };
 
+const deleteTask = (req, res) => {
+	loggerTask.verbose(req.uuid, 'controllers/task/deleteTask auth', req.auth);
+
+	const userId = req.auth.sub.id;
+	const { id } = req.swagger.params.id.value;
+
+	loggerTask.info(req.uuid, 'controllers/task/deleteTask id', id);
+
+	findTask({
+		where: {
+			userId,
+			id
+		}
+	})
+		.then((task) => {
+			if (!task) throw new Error('Task not found');
+			return task.destroy();
+		})
+		.then(() => {
+			loggerTask.info(req.uuid, 'controllers/task/deleteTask deleted task', id);
+			return res.json({ message: 'Success' });
+		})
+		.catch((err) => {
+			loggerTask.error(req.uuid, 'controllers/task/deleteTask err', err.message);
+			return res.status(err.status || 400).json({ message: err.message });
+		});
+};
+
 module.exports = {
 	postTask,
-	getTask
+	getTask,
+	deleteTask
 };
