@@ -21,7 +21,7 @@ const issueToken = (id, email) => {
 
 const validateToken = (req, securityDescription, token, cb) => {
 	const sendError = (msg) => {
-		loggerAuth.error('helpers/token/validateToken err', msg);
+		loggerAuth.error(req.uuid, 'helpers/token/validateToken err', msg);
 		return req.res.status(401).json({ message: `Access Denied: ${msg}` });
 	};
 
@@ -30,6 +30,7 @@ const validateToken = (req, securityDescription, token, cb) => {
 		jwt.verify(tokenString, SECRET, (error, token) => {
 			if (!error && token) {
 				loggerAuth.verbose(
+					req.uuid,
 					'helpers/auth/verifyToken verified_token',
 					token.sub
 				);
