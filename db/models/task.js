@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
 		userId: {
 			type: DataTypes.INTEGER,
 			required: true
+		},
+		bomb: {
+			type: DataTypes.JSONB,
+			defaultValue: {}
 		}
 	}, {});
 	Task.associate = function(models) {

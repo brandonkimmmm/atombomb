@@ -24,6 +24,10 @@ module.exports = {
 				type: Sequelize.INTEGER,
 				required: true
 			},
+			bomb: {
+				type: Sequelize.JSONB,
+				defaultValue: {}
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE
