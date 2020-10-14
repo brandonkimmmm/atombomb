@@ -112,10 +112,29 @@ paths:
           schema:
             $ref: "#/definitions/MessageResponse"
   /task:
-    x-swagger-router-controller: task
+    get:
+      x-swagger-router-controller: task
+      operationId: getTask
+      parameters:
+        - name: id
+          in: query
+          required: true
+          type: number
+          format: int32
+      responses:
+        201:
+          description: Success
+          schema:
+            type: object
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
+      security:
+        - Bearer: []
     post:
       description: Create a new task
-      operationId: createTask
+      operationId: postTask
       parameters:
         - name: data
           in: body

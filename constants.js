@@ -12,3 +12,7 @@ exports.REDIS_HOST = process.env.REDIS_HOST || 'localhost';
 exports.REDIS_PORT = process.env.REDIS_PORT || 6379;
 
 exports.TWITTER_OAUTH_KEY = 'twitter:oauth';
+
+exports.CONNECTED_SOCIAL_MEDIA = [
+	'twitter'
+];
