@@ -28,6 +28,11 @@ module.exports = {
 				type: Sequelize.JSONB,
 				defaultValue: {}
 			},
+			deadlineChanges: {
+				type: Sequelize.INTEGER,
+				required: true,
+				defaultValue: 0
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE

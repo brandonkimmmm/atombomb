@@ -153,6 +153,14 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
+    put:
+      description: Update a task deadline
+      operationId: putTask
+      parameters:
+        - name: id
+          in: query
+          required: true
+
   /twitter/connect:
     x-swagger-router-controller: twitter
     get:
