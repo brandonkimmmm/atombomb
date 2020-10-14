@@ -8,8 +8,10 @@ const TwitterLib = require('twitter');
 const { each } = require('lodash');
 const { TWITTER_API_SECRET, TWITTER_API_KEY } = require('../constants');
 const { sleep } = require('../api/helpers/general');
+const { cryptr } = require('../utils/cryptr');
 
 const taskCronJob = () => {
+	loggerCron.info('cron/task/taskCronJob started');
 	Task.findAll({
 		where: {
 			deadline: {
@@ -25,8 +27,12 @@ const taskCronJob = () => {
 		}
 	})
 		.then((tasks) => {
+			loggerCron.info('cron/task/taskCronJob tasks number', tasks.length);
 			each(tasks, async (task) => {
+				loggerCron.info('cron/task/taskCronJob task id', task.id, 'userId', task.user.id);
 				each((task.bomb), async (notification, socialMedia) => {
+					loggerCron.info('cron/task/taskCronJob bomb task id', task.id, 'socialMedia', socialMedia);
+
 					if (socialMedia === 'twitter') {
 						const twitterAuth = await Twitter.findOne({
 							where: {
@@ -38,15 +44,21 @@ const taskCronJob = () => {
 						const twitterClient = new TwitterLib({
 							consumer_key: TWITTER_API_KEY,
 							consumer_secret: TWITTER_API_SECRET,
-							access_token_key: twitterAuth.accessToken,
-							access_token_secret: twitterAuth.accessTokenSecret
+							access_token_key: cryptr.decrypt(twitterAuth.accessToken),
+							access_token_secret: cryptr.decrypt(twitterAuth.accessTokenSecret)
 						});
 
-						await twitterClient.post('statuses/update', { status: notification });
-						await sleep(1000);
+						try {
+							await twitterClient.post('statuses/update', { status: notification });
+							loggerCron.info('cron/task/taskCronJob posted', task.id, 'socialMedia', socialMedia, 'posted');
+						} catch (err) {
+							loggerCron.error('cron/task/taskCronJob err', task.id, socialMedia, err.message);
+						}
 					}
+					await sleep(1000);
 				});
 				await task.update({ expired: true }, { fields: [ 'expired' ] });
+				loggerCron.info('cron/task/taskCronJob task id', task.id, 'finished');
 			});
 		})
 		.then(() => {
