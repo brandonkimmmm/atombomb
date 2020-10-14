@@ -24,6 +24,16 @@ module.exports = {
 				type: Sequelize.INTEGER,
 				required: true
 			},
+			completed: {
+				type: Sequelize.BOOLEAN,
+				required: true,
+				defaultValue: false
+			},
+			expired: {
+				type: Sequelize.BOOLEAN,
+				required: true,
+				defaultValue: false
+			},
 			bomb: {
 				type: Sequelize.JSONB,
 				defaultValue: {}
