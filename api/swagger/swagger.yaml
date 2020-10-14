@@ -125,7 +125,7 @@ paths:
         201:
           description: Success
           schema:
-            type: object
+            $ref: "#/definitions/TaskObject"
         default:
           description: Error
           schema:
