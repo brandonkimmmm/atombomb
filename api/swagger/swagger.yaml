@@ -173,6 +173,38 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
+  /task/update-deadline:
+    x-swagger-router-controller: task
+    put:
+      description: Update a task deadline
+      operationId: updateTaskDeadline
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - id
+              - deadline
+            properties:
+              id:
+                type: number
+                format: int32
+              deadline:
+                type: string
+                format: date-time
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/TaskObject"
+      default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
+      security:
+        - Bearer: []
   /twitter/connect:
     x-swagger-router-controller: twitter
     get:

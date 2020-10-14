@@ -89,8 +89,38 @@ const deleteTask = (req, res) => {
 		});
 };
 
+const updateTaskDeadline = (req, res) => {
+	loggerTask.verbose(req.uuid, 'controllers/task/updateTaskDeadline auth', req.auth);
+
+	const userId = req.auth.sub.id;
+	const { id, deadline } = req.swagger.params.data.value;
+
+	loggerTask.info(req.uuid, 'controllers/task/updateTaskDeadline body', id, deadline);
+
+	findTask({
+		where: {
+			userId,
+			id
+		}
+	})
+		.then(async (task) => {
+			if (!task) throw new Error('Task not found');
+			await task.changeDeadline();
+			return task.update({ deadline }, { fields: ['deadline'], returning: true });
+		})
+		.then((task) => {
+			loggerTask.info(req.uuid, 'controllers/task/updateTaskDeadline task deadline updated', id);
+			return res.json(task);
+		})
+		.catch((err) => {
+			loggerTask.error(req.uuid, 'controllers/task/updateTaskDeadline err', err.message);
+			return res.status(err.status || 400).json({ message: err.message });
+		});
+};
+
 module.exports = {
 	postTask,
 	getTask,
-	deleteTask
+	deleteTask,
+	updateTaskDeadline
 };
