@@ -1,6 +1,6 @@
 'use strict';
 
-const { createTask, findTask } = require('../helpers/task');
+const { createTask, findTask, findAllTasks } = require('../helpers/task');
 const { loggerTask } = require('../../config/logger');
 
 const getTask = (req, res) => {
@@ -118,9 +118,30 @@ const updateTaskDeadline = (req, res) => {
 		});
 };
 
+const getAllTasks = (req, res) => {
+	loggerTask.verbose(req.uuid, 'controllers/task/getAllTasks auth', req.auth);
+
+	const { id } = req.auth.sub;
+
+	return findAllTasks({
+		where: {
+			userId: id
+		}
+	})
+		.then((tasks) => {
+			loggerTask.info(req.uuid, 'controllers/task/getAllTasks count', tasks.count);
+			return res.json(tasks);
+		})
+		.catch((err) => {
+			loggerTask.error(req.uuid, 'controllers/task/getAllTasks err', err.message);
+			return res.status(err.status || 400).json({ message: err.message });
+		});
+};
+
 module.exports = {
 	postTask,
 	getTask,
 	deleteTask,
+	getAllTasks,
 	updateTaskDeadline
 };

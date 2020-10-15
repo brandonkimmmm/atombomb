@@ -182,7 +182,7 @@ paths:
         200:
           description: Success
           schema:
-            $ref: "#/definitions/TaskObject"
+            $ref: "#/definitions/TasksObject"
         default:
           description: Error
           schema:
