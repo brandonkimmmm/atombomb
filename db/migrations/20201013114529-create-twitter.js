@@ -16,8 +16,12 @@ module.exports = {
 			type: Sequelize.STRING,
 			required: true
 		},
-		acccessToken: {
-			type: Sequelize.STRING,
+		accessToken: {
+			type: Sequelize.TEXT,
+			required: true
+		},
+		accessTokenSecret: {
+			type: Sequelize.TEXT,
 			required: true
 		},
 		twitterId: {

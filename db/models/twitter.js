@@ -14,12 +14,12 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			required: true
 		},
-		acccessToken: {
-			type: DataTypes.STRING,
+		accessToken: {
+			type: DataTypes.TEXT,
 			required: true
 		},
 		accessTokenSecret: {
-			type: DataTypes.STRING,
+			type: DataTypes.TEXT,
 			required: true
 		},
 		twitterId: {
@@ -29,8 +29,8 @@ module.exports = (sequelize, DataTypes) => {
 	}, {
 		hooks: {
 			beforeCreate: (twitter) => {
-				twitter.acccessToken = cryptr.encrypt(twitter.acccessToken);
-				twitter.acccessTokenSecret = cryptr.encrypt(twitter.acccessTokenSecret);
+				twitter.accessToken = cryptr.encrypt(twitter.accessToken);
+				twitter.accessTokenSecret = cryptr.encrypt(twitter.accessTokenSecret);
 			}
 		}
 	});
