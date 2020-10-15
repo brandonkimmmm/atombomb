@@ -3,14 +3,13 @@
 const { loggerCron } = require('../config/logger');
 const { User, Task, Twitter, Op } = require('../db/models');
 const moment = require('moment');
-const { CronJob } = require('cron');
 const TwitterLib = require('twitter');
 const { each } = require('lodash');
 const { TWITTER_API_SECRET, TWITTER_API_KEY } = require('../constants');
 const { sleep } = require('../api/helpers/general');
 const { cryptr } = require('../utils/cryptr');
 
-const taskCronJob = () => {
+const run = () => {
 	loggerCron.info('cron/task/taskCronJob started');
 	Task.findAll({
 		where: {
@@ -69,5 +68,6 @@ const taskCronJob = () => {
 		});
 };
 
-const job = new CronJob('0 * * * *', taskCronJob, null, false, 'Asia/Seoul');
-job.start();
+module.exports = {
+	run
+};
