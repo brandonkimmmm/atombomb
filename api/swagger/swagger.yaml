@@ -276,6 +276,19 @@ definitions:
     properties:
       message:
         type: string
+  TasksObject:
+    type: object
+    required:
+      - count
+      - data
+    properties:
+      count:
+        type: number
+        format: int32
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/TaskObject"
   TaskObject:
     type: object
     required:
