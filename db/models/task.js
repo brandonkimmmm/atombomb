@@ -45,14 +45,5 @@ module.exports = (sequelize, DataTypes) => {
 		// associations can be defined here
 	};
 
-	Task.prototype.changedDeadline = () => {
-		if (this.deadlineChanges === 3) {
-			throw new Error('Cannot change deadline anymore');
-		} else {
-			const deadlineChanges = this.deadlineChanges++;
-			this.set('deadlineChanges', deadlineChanges).save();
-		}
-	};
-
 	return Task;
 };

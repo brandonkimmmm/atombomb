@@ -11,7 +11,6 @@ const convertSequelizeCountAndRows = (data) => {
 		count: data.count,
 		data: data.rows.map((row) => {
 			const item = Object.assign({}, row.dataValues);
-			// delete item.id;
 			return item;
 		})
 	};

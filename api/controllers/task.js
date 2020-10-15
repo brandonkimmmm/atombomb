@@ -2,12 +2,13 @@
 
 const { createTask, findTask, findAllTasks } = require('../helpers/task');
 const { loggerTask } = require('../../config/logger');
+const moment = require('moment');
 
 const getTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/getTask auth', req.auth);
 
 	const userId = req.auth.sub.id;
-	const { id } = req.swagger.params.id.value;
+	const id = req.swagger.params.id.value;
 
 	loggerTask.info(req.uuid, 'controllers/task/getTask id', id);
 
@@ -65,7 +66,7 @@ const deleteTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/deleteTask auth', req.auth);
 
 	const userId = req.auth.sub.id;
-	const { id } = req.swagger.params.id.value;
+	const id = req.swagger.params.id.value;
 
 	loggerTask.info(req.uuid, 'controllers/task/deleteTask id', id);
 
@@ -93,7 +94,7 @@ const updateTaskDeadline = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/updateTaskDeadline auth', req.auth);
 
 	const userId = req.auth.sub.id;
-	const { id, deadline } = req.swagger.params.data.value;
+	let { id, deadline } = req.swagger.params.data.value;
 
 	loggerTask.info(req.uuid, 'controllers/task/updateTaskDeadline body', id, deadline);
 
@@ -103,10 +104,22 @@ const updateTaskDeadline = (req, res) => {
 			id
 		}
 	})
-		.then(async (task) => {
+		.then((task) => {
 			if (!task) throw new Error('Task not found');
-			await task.changeDeadline();
-			return task.update({ deadline }, { fields: ['deadline'], returning: true });
+			let deadlineChanges = task.deadlineChanges;
+			if (deadlineChanges === 3) throw new Error('Cannot change deadline more than three times');
+			deadlineChanges++;
+
+			return task.update(
+				{
+					deadline,
+					deadlineChanges
+				},
+				{
+					fields: ['deadline', 'deadlineChanges'],
+					returning: true
+				}
+			);
 		})
 		.then((task) => {
 			loggerTask.info(req.uuid, 'controllers/task/updateTaskDeadline task deadline updated', id);
