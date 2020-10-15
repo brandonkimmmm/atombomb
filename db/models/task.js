@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: false
 		},
 		expired: {
-			type: DataTypes.BOOLEAn,
+			type: DataTypes.BOOLEAN,
 			required: true,
 			defaultValue: false
 		},
