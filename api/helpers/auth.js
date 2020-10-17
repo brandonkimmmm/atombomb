@@ -11,10 +11,12 @@ const issueToken = (id, email) => {
 				id,
 				email
 			},
-			expiresIn: '1d',
 			iss: 'atombomb'
 		},
-		SECRET
+		SECRET,
+		{
+			expiresIn: '1d'
+		}
 	);
 	return token;
 };
