@@ -380,9 +380,14 @@ definitions:
     type: object
     required:
       - method
-      - post
+      - notification
     properties:
       method:
         type: string
-      post:
-        type: string
+      notification:
+        type: object
+        required:
+          - message
+        properties:
+          message:
+            type: string

@@ -30,7 +30,7 @@ const run = () => {
 			each(tasks, async (task) => {
 				loggerCron.info('cron/task/taskCronJob task id', task.id, 'userId', task.User.id);
 				each((task.bomb), async (notification, method) => {
-					loggerCron.info('cron/task/taskCronJob bomb task id', task.id, 'socialMedia', method);
+					loggerCron.info('cron/task/taskCronJob bomb task id', task.id, 'method', method);
 
 					if (method === 'twitter') {
 						const twitterAuth = await Twitter.findOne({
@@ -48,7 +48,7 @@ const run = () => {
 						});
 
 						try {
-							await twitterClient.post('statuses/update', { status: notification });
+							await twitterClient.post('statuses/update', { status: notification.message });
 							loggerCron.info('cron/task/taskCronJob posted', task.id, 'method', method, 'posted');
 						} catch (err) {
 							loggerCron.error('cron/task/taskCronJob err', task.id, method, err.message);
