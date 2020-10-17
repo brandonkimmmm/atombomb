@@ -173,6 +173,28 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
+  /task/complete:
+    x-swagger-router-controller: task
+    get:
+      description: Set task as completed
+      operationId: setTaskCompleted
+      parameters:
+        - name: id
+          in: query
+          required: true
+          type: number
+          format: int32
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/TaskObject"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
+      security:
+        - Bearer: []
   /task/bomb:
     x-swagger-router-controller: task
     post:

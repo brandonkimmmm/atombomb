@@ -171,9 +171,9 @@ const postTaskBomb = (req, res) => {
 			if (!task) throw new Error('Task not found');
 			return addBomb(task, method, post);
 		})
-		.then((job) => {
+		.then((task) => {
 			loggerTask.info(req.uuid, 'controllers/task/postTaskBomb id bomb added', id);
-			return res.json(job);
+			return res.json(task);
 		})
 		.catch((err) => {
 			loggerTask.error(req.uuid, 'controllers/task/postTaskBomb err', err.message);
@@ -201,12 +201,44 @@ const deleteTaskBomb = (req, res) => {
 			if (!task) throw new Error('Task not found');
 			return removeBomb(task, method);
 		})
-		.then((job) => {
+		.then((task) => {
 			loggerTask.info(req.uuid, 'controllers/task/deleteTaskBomb id bomb method deleted', id, method);
-			return res.json(job);
+			return res.json(task);
 		})
 		.catch((err) => {
 			loggerTask.error(req.uuid, 'controllers/task/deleteTaskBomb err', err.message);
+			return res.status(err.status || 400).json({ message: err.message });
+		});
+};
+
+const setTaskCompleted = (req, res) => {
+	loggerTask.verbose(req.uuid, 'controllers/task/setTaskCompleted auth', req.auth);
+
+	const userId = req.auth.sub.id;
+	const id = req.swagger.params.id.value;
+
+	loggerTask.info(req.uuid, 'controllers/task/setTaskCompleted id', id);
+
+	return findTask({
+		where: {
+			id,
+			userId
+		}
+	})
+		.then((task) => {
+			if (!task) throw new Error('Task not found');
+			if (task.expired) throw new Error('Task is expired');
+			if (task.completed) throw new Error('Task is already complete');
+			return task.update({
+				completed: true
+			}, { returning: true, fields: ['completed'] });
+		})
+		.then((task) => {
+			loggerTask.info(req.uuid, 'controllers/task/setTaskCompleted set as complete', id);
+			return res.json(task);
+		})
+		.catch((err) => {
+			loggerTask.error(req.uuid, 'controllers/task/setTaskCompleted err', err.message);
 			return res.status(err.status || 400).json({ message: err.message });
 		});
 };
@@ -218,5 +250,6 @@ module.exports = {
 	getAllTasks,
 	updateTaskDeadline,
 	postTaskBomb,
-	deleteTaskBomb
+	deleteTaskBomb,
+	setTaskCompleted
 };
