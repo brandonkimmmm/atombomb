@@ -1,7 +1,8 @@
 'use strict';
 
 const { loggerCron } = require('../config/logger');
-const { User, Task, Twitter, Op } = require('../db/models');
+const { User, Task, Twitter } = require('../db/models');
+const { Op } = require('sequelize');
 const moment = require('moment');
 const TwitterLib = require('twitter');
 const { each } = require('lodash');
@@ -21,21 +22,20 @@ const run = () => {
 			expired: false
 		},
 		include: {
-			model: User,
-			as: 'user'
+			model: User
 		}
 	})
 		.then((tasks) => {
 			loggerCron.info('cron/task/taskCronJob tasks number', tasks.length);
 			each(tasks, async (task) => {
-				loggerCron.info('cron/task/taskCronJob task id', task.id, 'userId', task.user.id);
+				loggerCron.info('cron/task/taskCronJob task id', task.id, 'userId', task.User.id);
 				each((task.bomb), async (notification, socialMedia) => {
 					loggerCron.info('cron/task/taskCronJob bomb task id', task.id, 'socialMedia', socialMedia);
 
 					if (socialMedia === 'twitter') {
 						const twitterAuth = await Twitter.findOne({
 							where: {
-								userId: task.user.id
+								userId: task.User.id
 							},
 							raw: true
 						});
