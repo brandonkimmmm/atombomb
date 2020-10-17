@@ -217,6 +217,8 @@ const deleteTaskBomb = (req, res) => {
 	})
 		.then((task) => {
 			if (!task) throw new Error('Task not found');
+			if (task.completed) throw new Error('Task is already completed');
+			if (task.expired) throw new Error('Task is expired');
 			return removeBomb(task, method);
 		})
 		.then((task) => {
