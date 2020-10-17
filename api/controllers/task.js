@@ -3,6 +3,7 @@
 const { createTask, findTask, findAllTasks } = require('../helpers/task');
 const { addBomb, removeBomb } = require('../helpers/bomb');
 const { loggerTask } = require('../../config/logger');
+const moment = require('moment');
 
 const getTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/getTask auth', req.auth);
@@ -106,6 +107,8 @@ const updateTaskDeadline = (req, res) => {
 	})
 		.then((task) => {
 			if (!task) throw new Error('Task not found');
+			if (task.completed) throw new Error('Task is already completed');
+			if (task.expired) throw new Error('Task is expired');
 			let deadlineChanges = task.deadlineChanges;
 			if (deadlineChanges === 3) throw new Error('Cannot change deadline more than three times');
 			deadlineChanges++;
