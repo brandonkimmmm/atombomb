@@ -34,6 +34,12 @@ const postTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/postTask auth', req.auth);
 
 	const { title, description, deadline } = req.swagger.params.data.value;
+
+	if (moment(deadline).isBefore(moment().add(1, 'hours'))) {
+		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'invalid deadline', deadline);
+		return res.status(400).json({ message: 'Deadline must be at least one hour after time of creation' });
+	}
+
 	loggerTask.info(req.uuid, 'controllers/task/postTask body', title, deadline);
 
 	findTask({
@@ -96,6 +102,11 @@ const updateTaskDeadline = (req, res) => {
 
 	const userId = req.auth.sub.id;
 	let { id, deadline } = req.swagger.params.data.value;
+
+	if (moment(deadline).isBefore(moment().add(1, 'hours'))) {
+		loggerTask.error(req.uuid, 'controllers/task/updateTaskDeadline err', 'invalid deadline', deadline);
+		return res.status(400).json({ message: 'Deadline must be at least one hour after time of update' });
+	}
 
 	loggerTask.info(req.uuid, 'controllers/task/updateTaskDeadline body', id, deadline);
 
