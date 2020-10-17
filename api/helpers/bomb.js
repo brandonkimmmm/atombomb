@@ -14,6 +14,7 @@ const addBomb = (userId, task, method, notification) => {
 		}, { raw: true })
 			.then((data) => {
 				if (!data) throw new Error(`User did not connect Atom Bomb to method ${method}`);
+				if (method === 'twitter' && notification.message.length > 180) throw new Error('Twitter posts cannot be over 180 characters');
 				const updatedBomb = {
 					...task.bomb,
 					[method]: notification
