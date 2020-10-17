@@ -1,7 +1,7 @@
 'use strict';
 
 const { createTask, findTask, findAllTasks } = require('../helpers/task');
-const { addBomb } = require('../helpers/bomb');
+const { addBomb, removeBomb } = require('../helpers/bomb');
 const { loggerTask } = require('../../config/logger');
 
 const getTask = (req, res) => {
@@ -181,11 +181,42 @@ const postTaskBomb = (req, res) => {
 		});
 };
 
+const deleteTaskBomb = (req, res) => {
+	loggerTask.verbose(req.uuid, 'controllers/task/deleteTaskBomb auth', req.auth);
+
+	const userId = req.auth.sub.id;
+	const id = req.swagger.params.id.value;
+	let method = req.swagger.params.method.value;
+	method = method.toLowerCase();
+
+	loggerTask.info(req.uuid, 'controllers/task/deleteTaskBomb id', id, 'method', method);
+
+	return findTask({
+		where: {
+			id,
+			userId
+		}
+	})
+		.then((task) => {
+			if (!task) throw new Error('Task not found');
+			return removeBomb(task, method);
+		})
+		.then((job) => {
+			loggerTask.info(req.uuid, 'controllers/task/deleteTaskBomb id bomb method deleted', id, method);
+			return res.json(job);
+		})
+		.catch((err) => {
+			loggerTask.error(req.uuid, 'controllers/task/deleteTaskBomb err', err.message);
+			return res.status(err.status || 400).json({ message: err.message });
+		});
+};
+
 module.exports = {
 	postTask,
 	getTask,
 	deleteTask,
 	getAllTasks,
 	updateTaskDeadline,
-	postTaskBomb
+	postTaskBomb,
+	deleteTaskBomb
 };

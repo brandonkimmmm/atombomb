@@ -176,7 +176,7 @@ paths:
   /task/bomb:
     x-swagger-router-controller: task
     post:
-      description: Add new for task
+      description: Add new bomb for task
       operationId: postTaskBomb
       parameters:
         - name: id
@@ -189,6 +189,30 @@ paths:
           required: true
           schema:
             $ref: "#/definitions/BombObject"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/TaskObject"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
+      security:
+        - Bearer: []
+    delete:
+      description: Remove bomb for task
+      operationId: deleteTaskBomb
+      parameters:
+        - name: id
+          in: query
+          required: true
+          type: number
+          format: int32
+        - name: method
+          in: query
+          required: true
+          type: string
       responses:
         200:
           description: Success
