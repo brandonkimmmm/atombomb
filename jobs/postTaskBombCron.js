@@ -26,13 +26,13 @@ const run = () => {
 		}
 	})
 		.then((tasks) => {
-			loggerCron.info('cron/task/taskCronJob tasks number', tasks.length);
+			loggerCron.info('cron/task/taskCronJob tasks for cron job', tasks.length);
 			each(tasks, async (task) => {
 				loggerCron.info('cron/task/taskCronJob task id', task.id, 'userId', task.User.id);
-				each((task.bomb), async (notification, socialMedia) => {
-					loggerCron.info('cron/task/taskCronJob bomb task id', task.id, 'socialMedia', socialMedia);
+				each((task.bomb), async (notification, method) => {
+					loggerCron.info('cron/task/taskCronJob bomb task id', task.id, 'socialMedia', method);
 
-					if (socialMedia === 'twitter') {
+					if (method === 'twitter') {
 						const twitterAuth = await Twitter.findOne({
 							where: {
 								userId: task.User.id
@@ -49,9 +49,9 @@ const run = () => {
 
 						try {
 							await twitterClient.post('statuses/update', { status: notification });
-							loggerCron.info('cron/task/taskCronJob posted', task.id, 'socialMedia', socialMedia, 'posted');
+							loggerCron.info('cron/task/taskCronJob posted', task.id, 'method', method, 'posted');
 						} catch (err) {
-							loggerCron.error('cron/task/taskCronJob err', task.id, socialMedia, err.message);
+							loggerCron.error('cron/task/taskCronJob err', task.id, method, err.message);
 						}
 					}
 					await sleep(1000);

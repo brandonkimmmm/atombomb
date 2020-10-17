@@ -1,8 +1,8 @@
 'use strict';
 
 const { createTask, findTask, findAllTasks } = require('../helpers/task');
+const { addBomb } = require('../helpers/bomb');
 const { loggerTask } = require('../../config/logger');
-const moment = require('moment');
 
 const getTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/getTask auth', req.auth);
@@ -151,10 +151,41 @@ const getAllTasks = (req, res) => {
 		});
 };
 
+const postTaskBomb = (req, res) => {
+	loggerTask.verbose(req.uuid, 'controllers/task/postTaskBomb auth', req.auth);
+
+	const userId = req.auth.sub.id;
+	const id = req.swagger.params.id.value;
+	let { method, post } = req.swagger.params.data.value;
+	method = method.toLowerCase();
+
+	loggerTask.info(req.uuid, 'controllers/task/postTaskBomb id', id, 'method', method);
+
+	return findTask({
+		where: {
+			id,
+			userId
+		}
+	})
+		.then((task) => {
+			if (!task) throw new Error('Task not found');
+			return addBomb(task, method, post);
+		})
+		.then((job) => {
+			loggerTask.info(req.uuid, 'controllers/task/postTaskBomb id bomb added', id);
+			return res.json(job);
+		})
+		.catch((err) => {
+			loggerTask.error(req.uuid, 'controllers/task/postTaskBomb err', err.message);
+			return res.status(err.status || 400).json({ message: err.message });
+		});
+};
+
 module.exports = {
 	postTask,
 	getTask,
 	deleteTask,
 	getAllTasks,
-	updateTaskDeadline
+	updateTaskDeadline,
+	postTaskBomb
 };

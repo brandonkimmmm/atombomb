@@ -173,6 +173,33 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
+  /task/bomb:
+    x-swagger-router-controller: task
+    post:
+      description: Add new for task
+      operationId: postTaskBomb
+      parameters:
+        - name: id
+          in: query
+          required: true
+          type: number
+          format: int32
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/BombObject"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/TaskObject"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
+      security:
+        - Bearer: []
   /tasks:
     x-swagger-router-controller: task
     get:
@@ -303,3 +330,13 @@ definitions:
       deadline:
         type: string
         format: date-time
+  BombObject:
+    type: object
+    required:
+      - method
+      - post
+    properties:
+      method:
+        type: string
+      post:
+        type: string
