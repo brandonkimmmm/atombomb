@@ -58,7 +58,6 @@ const verifyUserCode = (email, code) => {
 			return VerificationCode.findOne({ where: { userId: user.id } });
 		})
 		.then((verificationCode) => {
-			console.log(verificationCode)
 			if (code !== verificationCode.code) throw new Error('Invalid verification code');
 			return verificationCode.update({ verified: true });
 		})
