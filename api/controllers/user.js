@@ -3,6 +3,9 @@
 const { findUserByEmail, signupNewUser, verifyUserCode } = require('../helpers/user');
 const { loggerUser } = require('../../config/logger');
 const { issueToken } = require('../helpers/auth');
+const { sendEmail } = require('../../mail');
+const { MAILTYPE } = require('../../mail/strings');
+const moment = require('moment');
 
 const signupUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
@@ -25,6 +28,9 @@ const signupUser = (req, res) => {
 const loginUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
 	const ip = req.headers['x-real-ip'];
+	const device = req.headers['user-agent'];
+	const domain = req.headers['x-real-origin'];
+	const time = moment().toISOString();
 
 	loggerUser.verbose(req.uuid, 'controller/user/loginUser user login attempt', email, 'ip', ip);
 
@@ -33,7 +39,20 @@ const loginUser = (req, res) => {
 			if (!user) throw new Error('User does not exist');
 			if (user.verificationCode === 0) throw new Error('User is not verified');
 			if (!await user.validPassword(password, user.password)) throw new Error('Invalid password');
+
 			loggerUser.info(req.uuid, 'controller/user/loginUser user login', user.email);
+
+			sendEmail(
+				MAILTYPE.LOGIN,
+				email,
+				{
+					ip,
+					time,
+					device
+				},
+				domain
+			);
+
 			return res.json({
 				token: issueToken(user.id, user.email)
 			});
