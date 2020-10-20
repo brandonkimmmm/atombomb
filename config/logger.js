@@ -65,7 +65,8 @@ const LOGGER_NAMES = {
 	task: 'task',
 	twitter: 'twitter',
 	redis: 'redis',
-	cron: 'cron'
+	cron: 'cron',
+	email: 'email'
 };
 
 winston.loggers.add('default', generateLoggerConfiguration('all', false));
@@ -109,5 +110,6 @@ module.exports = {
 	loggerTask: winston.loggers.get(LOGGER_NAMES.task),
 	loggerTwitter: winston.loggers.get(LOGGER_NAMES.twitter),
 	loggerRedis: winston.loggers.get(LOGGER_NAMES.redis),
-	loggerCron: winston.loggers.get(LOGGER_NAMES.cron)
+	loggerCron: winston.loggers.get(LOGGER_NAMES.cron),
+	loggerEmail: winston.loggers.get(LOGGER_NAMES.email)
 };

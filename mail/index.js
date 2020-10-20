@@ -51,6 +51,7 @@ const send = (params) => {
 			return info;
 		})
 		.catch((error) => {
+			console.log(error)
 			loggerEmail.error('mail/index/sendSTMPEmail', error);
 		});
 };

@@ -1,10 +1,6 @@
 'use strict';
 
-const {
-	EMAIL_ICONS
-} = require('../../constants');
-const { DOMAIN } = require('../../../constants');
-
+const { EMAIL_ICONS, DOMAIN } = require('../../../constants');
 const styles = require('./styles');
 
 exports.Button = (link, text) => `

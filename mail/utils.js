@@ -30,20 +30,18 @@ const getCountryFromIp = (ip) => {
 	}`;
 };
 
-const transport = () => {
-	return nodemailer.createTransport({
-		host: SMTP_SERVER,
-		port: SMTP_PORT,
-		auth: {
-			user: SMTP_USER,
-			pass: SMTP_PASSWORD
-		},
-		logger: true,
-	});
-};
+const transport = nodemailer.createTransport({
+	host: SMTP_SERVER,
+	port: SMTP_PORT,
+	auth: {
+		user: SMTP_USER,
+		pass: SMTP_PASSWORD
+	},
+	logger: true,
+});
 
 const sendSMTPEmail = (params) => {
-	return transport().sendMail(params);
+	return transport.sendMail(params);
 };
 
 module.exports = {

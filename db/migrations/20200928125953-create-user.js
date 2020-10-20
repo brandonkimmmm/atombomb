@@ -12,6 +12,10 @@
 				type: Sequelize.STRING,
 				allowNull: false
 			},
+			verificationLevel: {
+				type: Sequelize.INTEGER,
+				defaultValue: 0
+			},
 			password: {
 				type: Sequelize.STRING,
 				allowNull: false
