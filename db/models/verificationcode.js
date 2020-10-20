@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 		hooks: {
 			afterUpdate: (code) => {
 				if (code.verified) {
-					sequelize.models.User.update({
+					return sequelize.models.User.update({
 						verificationLevel: 1
 					}, {
 						where: {

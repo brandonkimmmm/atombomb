@@ -19,6 +19,9 @@ const sendEmail = (
 		ToAddresses: [receiver]
 	};
 	switch (type) {
+		case MAILTYPE.WELCOME: {
+			break;
+		}
 		case MAILTYPE.LOGIN: {
 			if (data.time) data.time = formatDate(data.time);
 			if (data.ip) data.country = getCountryFromIp(data.ip);
@@ -51,7 +54,6 @@ const send = (params) => {
 			return info;
 		})
 		.catch((error) => {
-			console.log(error)
 			loggerEmail.error('mail/index/sendSTMPEmail', error);
 		});
 };

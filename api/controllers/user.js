@@ -1,6 +1,6 @@
 'use strict';
 
-const { findUserByEmail, signupNewUser } = require('../helpers/user');
+const { findUserByEmail, signupNewUser, verifyUserCode } = require('../helpers/user');
 const { loggerUser } = require('../../config/logger');
 const { issueToken } = require('../helpers/auth');
 
@@ -8,16 +8,16 @@ const signupUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
 	const ip = req.headers['x-real-ip'];
 
-	loggerUser.info(req.uuid, 'controller/user/createUser user signup', email, 'ip', ip);
+	loggerUser.verbose(req.uuid, 'controller/user/signupUser user signup', email, 'ip', ip);
 
 	signupNewUser(email, password)
 		.then(() => {
-			loggerUser.info(req.uuid, 'controller/user/createUser user created', email);
+			loggerUser.info(req.uuid, 'controller/user/signupUser user created', email);
 			return res.status(201).json({ message: 'Success' });
 		})
 		.catch((err) => {
 			console.log(err);
-			loggerUser.error(req.uuid, 'controller/user/createUser err', err.message);
+			loggerUser.error(req.uuid, 'controller/user/signupUser err', err.message);
 			return res.status(err.status || 400).json({ message: err.message });
 		});
 };
@@ -26,7 +26,7 @@ const loginUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
 	const ip = req.headers['x-real-ip'];
 
-	loggerUser.info(req.uuid, 'controller/user/loginUser user login attempt', email, 'ip', ip);
+	loggerUser.verbose(req.uuid, 'controller/user/loginUser user login attempt', email, 'ip', ip);
 
 	findUserByEmail(email)
 		.then(async (user) => {
@@ -44,7 +44,24 @@ const loginUser = (req, res) => {
 		});
 };
 
+const verifyUser = (req, res) => {
+	const { email, verification_code } = req.swagger.params.data.value;
+	const ip = req.headers['x-real-ip'];
+
+	loggerUser.verbose(req.uuid, 'controller/user/verifyUser user email', email, 'ip', ip);
+
+	verifyUserCode(email, verification_code)
+		.then(() => {
+			return res.json({ message: 'Success' });
+		})
+		.catch((err) => {
+			loggerUser.error(req.uuid, 'controller/user/verifyUser err', err.message);
+			return res.status(err.status || 400).json({ message: err.message });
+		});
+};
+
 module.exports = {
 	signupUser,
-	loginUser
+	loginUser,
+	verifyUser
 };

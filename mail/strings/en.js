@@ -21,6 +21,16 @@ const FOOTER = {
 	INVITE_YOUR_FRIENDS: 'Invite your friends',
 };
 
+const WELCOME = {
+	TITLE: 'Welcome',
+	GREETING: (name) => COMMON.GREETING(name),
+	BODY: {
+		1: 'Thank you for signing up to Atom Bomb.',
+		2: 'If you have any questions or concerns, please contact us simply by replying to this email.'
+	},
+	CLOSING: COMMON.CLOSING
+};
+
 const SIGNUP = {
 	TITLE: 'Sign Up',
 	GREETING: (name) => COMMON.GREETING(name),
@@ -82,6 +92,7 @@ const CONTACTFORM = {
 
 module.exports = {
 	FOOTER,
+	WELCOME,
 	COMMON,
 	SIGNUP,
 	LOGIN,

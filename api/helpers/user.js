@@ -51,8 +51,30 @@ const signupNewUser = (email, password) => {
 		});
 };
 
+const verifyUserCode = (email, code) => {
+	return User.findOne({ where: { email } })
+		.then((user) => {
+			if (!user) throw new Error('User not found');
+			return VerificationCode.findOne({ where: { userId: user.id } });
+		})
+		.then((verificationCode) => {
+			console.log(verificationCode)
+			if (code !== verificationCode.code) throw new Error('Invalid verification code');
+			return verificationCode.update({ verified: true });
+		})
+		.then(() => {
+			sendEmail(
+				MAILTYPE.WELCOME,
+				email,
+				{}
+			);
+			return;
+		});
+};
+
 module.exports = {
 	findUserByEmail,
 	findUserById,
-	signupNewUser
+	signupNewUser,
+	verifyUserCode
 };

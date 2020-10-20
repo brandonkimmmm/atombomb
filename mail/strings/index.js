@@ -1,6 +1,7 @@
 'use strict';
 
 const MAILTYPE = {
+	WELCOME: 'welcome',
 	LOGIN: 'login',
 	SIGNUP: 'signup',
 	RESET_PASSWORD: 'resetPassword',
