@@ -80,8 +80,8 @@ paths:
   /signup:
     x-swagger-router-controller: user
     post:
-      description: Create a new user
-      operationId: createUser
+      description: Signup a new user
+      operationId: signupUser
       parameters:
         - name: data
           in: body
@@ -101,12 +101,7 @@ paths:
         201:
           description: Success
           schema:
-            type: object
-            required:
-              - email
-            properties:
-              email:
-                type: string
+            $ref: "#/definitions/MessageResponse"
         default:
           description: Error
           schema:

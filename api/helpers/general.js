@@ -16,7 +16,12 @@ const convertSequelizeCountAndRows = (data) => {
 	};
 };
 
+const isValidPassword = (password) => {
+	return /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(password);
+};
+
 module.exports = {
 	convertSequelizeCountAndRows,
-	sleep
+	sleep,
+	isValidPassword
 };

@@ -1,25 +1,22 @@
 'use strict';
 
-const { findUserByEmail } = require('../helpers/user');
-const { User } = require('../../db/models');
+const { findUserByEmail, signupNewUser } = require('../helpers/user');
 const { loggerUser } = require('../../config/logger');
 const { issueToken } = require('../helpers/auth');
 
-const createUser = (req, res) => {
+const signupUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
+	const ip = req.headers['x-real-ip'];
 
-	loggerUser.info(req.uuid, 'controller/user/createUser user signup', email);
+	loggerUser.info(req.uuid, 'controller/user/createUser user signup', email, 'ip', ip);
 
-	findUserByEmail(email)
-		.then((user) => {
-			if (user) throw new Error('User already exists');
-			return User.create({ email, password });
-		})
-		.then((user) => {
-			loggerUser.info(req.uuid, 'controller/user/createUser user created', user.email);
-			return res.status(201).json({ email: user.email });
+	signupNewUser(email, password)
+		.then(() => {
+			loggerUser.info(req.uuid, 'controller/user/createUser user created', email);
+			return res.status(201).json({ message: 'Success' });
 		})
 		.catch((err) => {
+			console.log(err);
 			loggerUser.error(req.uuid, 'controller/user/createUser err', err.message);
 			return res.status(err.status || 400).json({ message: err.message });
 		});
@@ -27,12 +24,14 @@ const createUser = (req, res) => {
 
 const loginUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
+	const ip = req.headers['x-real-ip'];
 
-	loggerUser.info(req.uuid, 'controller/user/loginUser user login attempt', email);
+	loggerUser.info(req.uuid, 'controller/user/loginUser user login attempt', email, 'ip', ip);
 
 	findUserByEmail(email)
 		.then(async (user) => {
 			if (!user) throw new Error('User does not exist');
+			if (user.verificationCode === 0) throw new Error('User is not verified');
 			if (!await user.validPassword(password, user.password)) throw new Error('Invalid password');
 			loggerUser.info(req.uuid, 'controller/user/loginUser user login', user.email);
 			return res.json({
@@ -46,6 +45,6 @@ const loginUser = (req, res) => {
 };
 
 module.exports = {
-	createUser,
+	signupUser,
 	loginUser
 };
