@@ -91,13 +91,25 @@ const CONTACTFORM = {
 };
 
 const BOMB = {
-	TITLE: (email) => `${email} has failed to complete a task`,
+	TITLE: (email) => `${email} Failed to Complete a Task`,
 	GREETING: (sentEmail) => COMMON.GREETING(sentEmail),
 	BODY: {
 		1: (email) => `This email is regarding the person with email ${email}`,
 		2: (task, deadline) => `I've failed to complete the task of ${task} by the deadline ${deadline}`,
-		3: (message) => `${message}`,
-		4: 'Please remind me to complete my tasks on time in the future'
+		3: (description) => `Task description: ${description}`,
+		4: (message) => `${message}`,
+		5: 'Please remind me to complete my tasks on time in the future'
+	},
+	CLOSING: COMMON.CLOSING
+};
+
+const NOTIFYDEADLINE  = {
+	TITLE: 'Task Deadline Approaching',
+	GREETING: (email) => COMMON.GREETING(email),
+	BODY: {
+		1: (task) => `Your task ${task} is going to be due in one day`,
+		2: (deadline) => `Deadline: ${deadline}`,
+		3: 'Your bombs will be posted/sent by this time tomorrow. Make sure to complete your task!'
 	},
 	CLOSING: COMMON.CLOSING
 };
@@ -111,5 +123,6 @@ module.exports = {
 	RESETPASSWORD,
 	ACCOUNTVERIFY,
 	CONTACTFORM,
-	BOMB
+	BOMB,
+	NOTIFYDEADLINE
 };

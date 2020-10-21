@@ -19,23 +19,26 @@ const sendEmail = (
 		ToAddresses: [receiver]
 	};
 	switch (type) {
-		case MAILTYPE.BOMB:
-		case MAILTYPE.WELCOME: {
+		case MAILTYPE.WELCOME:
 			break;
-		}
-		case MAILTYPE.LOGIN: {
+		case MAILTYPE.NOTIFYDEADLINE:
+			if (data.deadline) data.deadline = formatDate(data.deadline);
+			break;
+		case MAILTYPE.LOGIN:
 			if (data.time) data.time = formatDate(data.time);
 			if (data.ip) data.country = getCountryFromIp(data.ip);
 			break;
-		}
-		case MAILTYPE.SIGNUP: {
+		case MAILTYPE.BOMB:
+			to.ToAddresses = [data.sentEmail];
+			to.BccAddresses = [receiver];
+			if (data.deadline) data.deadline = formatDate(data.deadline);
+			break;
+		case MAILTYPE.SIGNUP:
 			to.BccAddresses = [SUPPORT_EMAIL];
 			break;
-		}
-		case MAILTYPE.CONTACT_FORM: {
+		case MAILTYPE.CONTACT_FORM:
 			to.ToAddresses = [SUPPORT_EMAIL];
 			break;
-		}
 		default:
 			return;
 	}

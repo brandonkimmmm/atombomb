@@ -9,9 +9,11 @@ const { each } = require('lodash');
 const { TWITTER_API_SECRET, TWITTER_API_KEY } = require('../constants');
 const { sleep } = require('../api/helpers/general');
 const { cryptr } = require('../utils/cryptr');
+const { sendEmail } = require('../mail');
+const { MAILTYPE } = require('../mail/strings');
 
 const run = () => {
-	loggerCron.info('cron/task/taskCronJob started');
+	loggerCron.info('cron/task/postTaskBombCron started');
 	Task.findAll({
 		where: {
 			deadline: {
@@ -26,11 +28,11 @@ const run = () => {
 		}
 	})
 		.then((tasks) => {
-			loggerCron.info('cron/task/taskCronJob tasks for cron job', tasks.length);
+			loggerCron.info('cron/task/postTaskBombCron tasks for cron job', tasks.length);
 			each(tasks, async (task) => {
-				loggerCron.info('cron/task/taskCronJob task id', task.id, 'userId', task.User.id);
+				loggerCron.info('cron/task/postTaskBombCron task id', task.id, 'userId', task.User.id);
 				each((task.bomb), async (data, method) => {
-					loggerCron.info('cron/task/taskCronJob bomb task id', task.id, 'method', method);
+					loggerCron.info('cron/task/postTaskBombCron bomb task id', task.id, 'method', method);
 
 					if (method === 'twitter') {
 						const twitterAuth = await Twitter.findOne({
@@ -49,22 +51,34 @@ const run = () => {
 
 						try {
 							await twitterClient.post('statuses/update', { status: data.notification });
-							loggerCron.info('cron/task/taskCronJob posted', task.id, 'method', method, 'posted');
+							loggerCron.info('cron/task/postTaskBombCron posted', task.id, 'method', method, 'posted');
 						} catch (err) {
-							loggerCron.error('cron/task/taskCronJob err', task.id, method, err.message);
+							loggerCron.error('cron/task/postTaskBombCron err', task.id, method, err.message);
 						}
+					} else if (method === 'email') {
+						sendEmail(
+							MAILTYPE.BOMB,
+							task.User.email,
+							{
+								sentEmail: data.email,
+								task: task.title,
+								description: task.description,
+								message: data.notification,
+								deadline: task.deadline
+							}
+						);
 					}
 					await sleep(1000);
 				});
 				await task.update({ expired: true }, { fields: [ 'expired' ] });
-				loggerCron.info('cron/task/taskCronJob task id', task.id, 'finished');
+				loggerCron.info('cron/task/postTaskBombCron task id', task.id, 'finished');
 			});
 		})
 		.then(() => {
-			loggerCron.info('cron/task/taskCronJob finished');
+			loggerCron.info('cron/task/postTaskBombCron finished');
 		})
 		.catch((err) => {
-			loggerCron.error('cron/task/taskCronJob err', err.message);
+			loggerCron.error('cron/task/postTaskBombCron err', err.message);
 		});
 };
 

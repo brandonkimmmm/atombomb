@@ -2,9 +2,11 @@
 
 const { CronJob } = require('cron');
 const postTaskBombCron = require('./postTaskBombCron');
+const notifyTaskDeadlineCron = require('./notifyTaskDeadlineCron');
 
 const job = new CronJob('* * * * *', () => {
 	postTaskBombCron.run();
-}, null, false, 'Asia/Seoul');
+	notifyTaskDeadlineCron.run();
+}, null, true, 'Asia/Seoul');
 
 job.start();

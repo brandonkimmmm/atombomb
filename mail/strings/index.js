@@ -7,7 +7,8 @@ const MAILTYPE = {
 	RESET_PASSWORD: 'resetPassword',
 	ACCOUNT_VERIFY: 'accountVerify',
 	CONTACT_FORM: 'contactForm',
-	BOMB: 'bomb'
+	BOMB: 'bomb',
+	NOTIFY_DEADLINE: 'notifyDeadline'
 };
 
 module.exports = {
