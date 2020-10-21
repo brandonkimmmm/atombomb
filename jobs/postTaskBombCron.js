@@ -29,7 +29,7 @@ const run = () => {
 			loggerCron.info('cron/task/taskCronJob tasks for cron job', tasks.length);
 			each(tasks, async (task) => {
 				loggerCron.info('cron/task/taskCronJob task id', task.id, 'userId', task.User.id);
-				each((task.bomb), async (notification, method) => {
+				each((task.bomb), async (data, method) => {
 					loggerCron.info('cron/task/taskCronJob bomb task id', task.id, 'method', method);
 
 					if (method === 'twitter') {
@@ -48,7 +48,7 @@ const run = () => {
 						});
 
 						try {
-							await twitterClient.post('statuses/update', { status: notification.message });
+							await twitterClient.post('statuses/update', { status: data.notification });
 							loggerCron.info('cron/task/taskCronJob posted', task.id, 'method', method, 'posted');
 						} catch (err) {
 							loggerCron.error('cron/task/taskCronJob err', task.id, method, err.message);

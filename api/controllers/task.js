@@ -37,7 +37,7 @@ const postTask = (req, res) => {
 	const { title, description, deadline, sent_to_email, notification } = req.swagger.params.data.value;
 
 	if (!isEmail(sent_to_email)) {
-		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'invalid sendToEmail', sendToEmasent_to_emailil);
+		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'invalid sendToEmail', sent_to_email);
 		return res.status(400).json({ message: 'Email being sent to is not valid' });
 	}
 
