@@ -434,3 +434,5 @@ definitions:
         properties:
           message:
             type: string
+      opts:
+        type: object

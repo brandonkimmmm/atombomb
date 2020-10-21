@@ -185,7 +185,7 @@ const postTaskBomb = (req, res) => {
 
 	const userId = req.auth.sub.id;
 	const id = req.swagger.params.id.value;
-	let { method, notification } = req.swagger.params.data.value;
+	let { method, notification, opts } = req.swagger.params.data.value;
 	method = method.toLowerCase();
 
 	loggerTask.info(req.uuid, 'controllers/task/postTaskBomb id', id, 'method', method);
@@ -200,7 +200,7 @@ const postTaskBomb = (req, res) => {
 			if (!task) throw new Error('Task not found');
 			if (task.completed) throw new Error('Task is already completed');
 			if (task.expired) throw new Error('Task is expired');
-			return addBomb(userId, task, method, notification);
+			return addBomb(userId, task, method, notification, opts);
 		})
 		.then((task) => {
 			loggerTask.info(req.uuid, 'controllers/task/postTaskBomb id bomb added', id);

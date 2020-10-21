@@ -3,7 +3,7 @@
 const { CONNECTED_SOCIAL_MEDIA } = require('../../constants');
 const models = require('../../db/models');
 
-const addBomb = (userId, task, method, notification) => {
+const addBomb = (userId, task, method, notification, opts) => {
 	if (!CONNECTED_SOCIAL_MEDIA.includes(method)) throw new Error(`Method ${method} not valid`);
 
 	if (method !== 'email') {
@@ -18,7 +18,8 @@ const addBomb = (userId, task, method, notification) => {
 				const updatedBomb = {
 					...task.bomb,
 					[method]: {
-						notification
+						notification,
+						...opts
 					}
 				};
 				return task.update({
@@ -29,7 +30,8 @@ const addBomb = (userId, task, method, notification) => {
 		const updatedBomb = {
 			...task.bomb,
 			[method]: {
-				notification
+				notification,
+				email: opts.email || task.email
 			}
 		};
 		return task.update({
