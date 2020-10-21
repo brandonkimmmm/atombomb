@@ -19,6 +19,7 @@ const sendEmail = (
 		ToAddresses: [receiver]
 	};
 	switch (type) {
+		case MAILTYPE.BOMB:
 		case MAILTYPE.WELCOME: {
 			break;
 		}

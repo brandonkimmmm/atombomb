@@ -90,6 +90,18 @@ const CONTACTFORM = {
 	}
 };
 
+const BOMB = {
+	TITLE: (email) => `${email} has failed to complete a task`,
+	GREETING: (sentEmail) => COMMON.GREETING(sentEmail),
+	BODY: {
+		1: (email) => `This email is regarding the person with email ${email}`,
+		2: (task, deadline) => `I've failed to complete the task of ${task} by the deadline ${deadline}`,
+		3: (message) => `${message}`,
+		4: 'Please remind me to complete my tasks on time in the future'
+	},
+	CLOSING: COMMON.CLOSING
+};
+
 module.exports = {
 	FOOTER,
 	WELCOME,
@@ -98,5 +110,6 @@ module.exports = {
 	LOGIN,
 	RESETPASSWORD,
 	ACCOUNTVERIFY,
-	CONTACTFORM
+	CONTACTFORM,
+	BOMB
 };
