@@ -17,7 +17,9 @@ const addBomb = (userId, task, method, notification) => {
 				if (method === 'twitter' && notification.message.length > 180) throw new Error('Twitter posts cannot be over 180 characters');
 				const updatedBomb = {
 					...task.bomb,
-					[method]: notification
+					[method]: {
+						notification
+					}
 				};
 				return task.update({
 					bomb: updatedBomb
@@ -26,7 +28,9 @@ const addBomb = (userId, task, method, notification) => {
 	} else {
 		const updatedBomb = {
 			...task.bomb,
-			[method]: notification
+			[method]: {
+				notification
+			}
 		};
 		return task.update({
 			bomb: updatedBomb

@@ -164,7 +164,7 @@ paths:
           description: New task body
           required: true
           schema:
-            $ref: "#/definitions/TaskObject"
+            $ref: "#/definitions/PostTaskBody"
       responses:
         201:
           description: Success
@@ -385,6 +385,26 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/TaskObject"
+  PostTaskBody:
+    type: object
+    required:
+      - title
+      - description
+      - deadline
+      - sent_to_email
+      - notification
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      deadline:
+        type: string
+        format: date-time
+      sendToEmail:
+        type: string
+      emailMessage:
+        type: string
   TaskObject:
     type: object
     required:

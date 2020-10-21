@@ -4,6 +4,7 @@ const { createTask, findTask, findAllTasks } = require('../helpers/task');
 const { addBomb, removeBomb } = require('../helpers/bomb');
 const { loggerTask } = require('../../config/logger');
 const moment = require('moment');
+const { isEmail } = require('validator');
 
 const getTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/getTask auth', req.auth);
@@ -33,12 +34,18 @@ const getTask = (req, res) => {
 const postTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/postTask auth', req.auth);
 
-	const { title, description, deadline } = req.swagger.params.data.value;
+	const { title, description, deadline, sent_to_email, notification } = req.swagger.params.data.value;
+
+	if (!isEmail(sent_to_email)) {
+		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'invalid sendToEmail', sendToEmasent_to_emailil);
+		return res.status(400).json({ message: 'Email being sent to is not valid' });
+	}
 
 	if (moment(deadline).isBefore(moment().add(1, 'hours'))) {
 		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'invalid deadline', deadline);
 		return res.status(400).json({ message: 'Deadline must be at least one hour after time of creation' });
 	}
+
 
 	loggerTask.info(req.uuid, 'controllers/task/postTask body', title, deadline);
 
@@ -56,7 +63,13 @@ const postTask = (req, res) => {
 				title,
 				description,
 				deadline,
-				userId: req.auth.sub.id
+				userId: req.auth.sub.id,
+				bomb: {
+					email: {
+						notification,
+						email: sent_to_email
+					}
+				}
 			});
 		})
 		.then((task) => {
