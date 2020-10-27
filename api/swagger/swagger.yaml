@@ -401,9 +401,9 @@ definitions:
       deadline:
         type: string
         format: date-time
-      sendToEmail:
+      sent_to_email:
         type: string
-      emailMessage:
+      notification:
         type: string
   TaskObject:
     type: object
