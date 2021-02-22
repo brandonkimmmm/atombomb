@@ -1,7 +1,7 @@
 'use strict';
 
 const { User, VerificationCode } = require('../../db/models');
-const { isValidPassword, sleep } = require('./general');
+const { isValidPassword } = require('./general');
 const { isEmail } = require('validator');
 const { reject } = require('bluebird');
 const { sendEmail } = require('../../mail/index');
@@ -51,29 +51,8 @@ const signupNewUser = (email, password) => {
 		});
 };
 
-const verifyUserCode = (email, code) => {
-	return User.findOne({ where: { email } })
-		.then((user) => {
-			if (!user) throw new Error('User not found');
-			return VerificationCode.findOne({ where: { userId: user.id } });
-		})
-		.then((verificationCode) => {
-			if (code !== verificationCode.code) throw new Error('Invalid verification code');
-			return verificationCode.update({ verified: true });
-		})
-		.then(() => {
-			sendEmail(
-				MAILTYPE.WELCOME,
-				email,
-				{}
-			);
-			return;
-		});
-};
-
 module.exports = {
 	findUserByEmail,
 	findUserById,
-	signupNewUser,
-	verifyUserCode
+	signupNewUser
 };

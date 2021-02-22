@@ -12,9 +12,9 @@
 				type: Sequelize.STRING,
 				allowNull: false
 			},
-			verificationLevel: {
-				type: Sequelize.INTEGER,
-				defaultValue: 0
+			verified: {
+				type: Sequelize.BOOLEAN,
+				defaultValue: false
 			},
 			password: {
 				type: Sequelize.STRING,

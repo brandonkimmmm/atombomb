@@ -106,34 +106,6 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/MessageResponse"
-  /verify:
-    x-swagger-router-controller: user
-    post:
-      operationId: verifyUser
-      description: Verify a user
-      parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            type: object
-            required:
-              - email
-              - verification_code
-            properties:
-              email:
-                type: string
-              verification_code:
-                type: string
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: "#/definitions/MessageResponse"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/MessageResponse"
   /task:
     x-swagger-router-controller: task
     get:

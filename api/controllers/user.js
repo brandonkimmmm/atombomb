@@ -1,6 +1,6 @@
 'use strict';
 
-const { findUserByEmail, signupNewUser, verifyUserCode } = require('../helpers/user');
+const { findUserByEmail, signupNewUser } = require('../helpers/user');
 const { loggerUser } = require('../../config/logger');
 const { issueToken } = require('../helpers/auth');
 const { sendEmail } = require('../../mail');
@@ -37,7 +37,6 @@ const loginUser = (req, res) => {
 	findUserByEmail(email)
 		.then(async (user) => {
 			if (!user) throw new Error('User does not exist');
-			if (user.verificationCode === 0) throw new Error('User is not verified');
 			if (!await user.validPassword(password, user.password)) throw new Error('Invalid password');
 
 			loggerUser.info(req.uuid, 'controller/user/loginUser user login', user.email);
@@ -63,24 +62,7 @@ const loginUser = (req, res) => {
 		});
 };
 
-const verifyUser = (req, res) => {
-	const { email, verification_code } = req.swagger.params.data.value;
-	const ip = req.headers['x-real-ip'];
-
-	loggerUser.verbose(req.uuid, 'controller/user/verifyUser user email', email, 'ip', ip);
-
-	verifyUserCode(email, verification_code)
-		.then(() => {
-			return res.json({ message: 'Success' });
-		})
-		.catch((err) => {
-			loggerUser.error(req.uuid, 'controller/user/verifyUser err', err.message);
-			return res.status(err.status || 400).json({ message: err.message });
-		});
-};
-
 module.exports = {
 	signupUser,
-	loginUser,
-	verifyUser
+	loginUser
 };
