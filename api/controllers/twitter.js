@@ -27,7 +27,6 @@ const getRequestToken = (req, res) => {
 				oauthRequestTokenSecret,
 				id
 			});
-			console.log(oauthRequestToken)
 			return all([
 				oauthRequestToken,
 				redis.hsetAsync(TWITTER_OAUTH_KEY, oauthRequestToken, oauthRequestData)
@@ -65,13 +64,13 @@ const getAccessToken = (req, res) => {
 				)
 			]);
 		})
-		.then(([ id, [ oauthAccessToken, oauthAccessTokenSecret, { user_id, screen_name } ] ]) => {
+		.then(([ id, [ oauthAccessToken, oauthAccessTokenSecret, data] ]) => {
 			return Twitter.create({
 				userId: id,
-				username: screen_name,
+				username: data.screen_name,
 				accessToken: oauthAccessToken,
 				accessTokenSecret: oauthAccessTokenSecret,
-				twitterId: user_id
+				twitterId: data.user_id
 			});
 		})
 		.then(() => {
