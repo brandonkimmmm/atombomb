@@ -4,7 +4,7 @@
 const { twitterOauth } = require('../../utils/oauth');
 const { loggerTwitter } = require('../../config/logger');
 const redis = require('../../db/redis');
-const { TWITTER_OAUTH_KEY } = require('../../constants');
+const { TWITTER_OAUTH_KEY, DOMAIN } = require('../../constants');
 const { Twitter } = require('../../db/models');
 const { all } = require('bluebird');
 
@@ -74,7 +74,7 @@ const getAccessToken = (req, res) => {
 			});
 		})
 		.then(() => {
-			return res.redirect('http://127.0.0.1:3000?alert=Twitter&20Verified');
+			return res.redirect(DOMAIN);
 		})
 		.catch((err) => {
 			loggerTwitter.error(req.uuid, 'controllers/twitter/getAccessToken', err.message || 'Something went wrong');

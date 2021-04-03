@@ -2,6 +2,8 @@
 
 require('dotenv').config();
 
+exports.DOMAIN = process.env.DOMAIN || 'http://localhost:3000';
+
 exports.DB_HOST = process.env.DB_HOST || '127.0.0.1';
 exports.DB_PORT = process.env.DB_PORT || 5432;
 exports.DB_NAME = process.env.DB_NAME || 'atombomb';
