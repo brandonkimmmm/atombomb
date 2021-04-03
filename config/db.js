@@ -1,6 +1,7 @@
 
 'use strict';
 
+const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD, DB_DIALECT } = require('../constants');
 const { loggerDb } = require('../config/logger');
 const logging = (sql) => {
 	loggerDb.debug(sql);
@@ -8,30 +9,32 @@ const logging = (sql) => {
 
 module.exports = {
 	'development': {
-		'username': 'postgres',
-		'password': 'postgres',
-		'database': 'atombomb-dev',
-		'host': '127.0.0.1',
-		'port': 5432,
-		'dialect': 'postgres',
+		'username': DB_USER,
+		'password': DB_PASSWORD,
+		'database': DB_NAME,
+		'host': DB_HOST,
+		'port': DB_PORT,
+		'dialect': DB_DIALECT,
 		'operatorsAliases': false,
 		logging
 	},
 	'test': {
-		'username': 'postgres',
-		'password': null,
-		'database': 'database_test',
-		'host': process.env.TEST_DATABASE_URL,
-		'dialect': 'mysql',
+		'username': DB_USER,
+		'password': DB_PASSWORD,
+		'database': DB_NAME,
+		'host': DB_HOST,
+		'port': DB_PORT,
+		'dialect': DB_DIALECT,
 		'operatorsAliases': false,
 		logging
 	},
 	'production': {
-		'username': 'postgres',
-		'password': null,
-		'database': 'database_production',
-		'host': process.env.DATABASE_URL,
-		'dialect': 'mysql',
+		'username': DB_USER,
+		'password': DB_PASSWORD,
+		'database': DB_NAME,
+		'host': DB_HOST,
+		'port': DB_PORT,
+		'dialect': DB_DIALECT,
 		'operatorsAliases': false,
 		logging
 	}

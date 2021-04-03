@@ -11,7 +11,6 @@ const initializeMode = (modeString = '') => {
 	return modes;
 };
 
-
 const api = {
 	name      : 'api',
 	script    : 'app.js',

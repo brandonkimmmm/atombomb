@@ -1,14 +1,16 @@
-FROM node:8
+FROM node:8.17.0-alpine
 
-RUN mkdir -p /user/src/app
-WORKDIR /usr/src/app
+RUN mkdir -p /app
+WORKDIR /app
 
-COPY package*.json /usr/src/app/
+RUN npm install pm2@3.2.7 sequelize-cli@5.4.0 -g
+
+COPY package*.json /app/
 
 RUN npm install
 
-COPY . /usr/src/app
+COPY . /app
 
-EXPOSE 8080
+EXPOSE 80
 
-CMD ["npm", "start"]
+ENTRYPOINT ["/app/entrypoint.sh"]

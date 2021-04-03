@@ -78,7 +78,7 @@ const run = () => {
 			loggerCron.info('cron/task/postTaskBombCron finished');
 		})
 		.catch((err) => {
-			loggerCron.error('cron/task/postTaskBombCron err', err.message);
+			loggerCron.error('cron/task/postTaskBombCron err', err.stack);
 		});
 };
 

@@ -1,0 +1,56 @@
+version: "3"
+services:
+  atombomb-server:
+    image: atombomb-server
+    container_name: atombomb-server
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - atombomb-redis
+      - atombomb-db
+    networks:
+      - atombomb-network
+    ports:
+      - 80:80
+    entrypoint:
+      - pm2-runtime
+      - start
+      - ecosystem.config.js
+      - --env
+      - development
+    env_file:
+      - .env
+    volumes:
+      - ./api:/app/api
+      - ./config:/app/config
+      - ./db:/app/db
+      - ./mail:/app/mail
+      - ./app.js:/app/app.js
+      - ./ecosystem.config.js:/app/ecosystem.config.js
+      - ./constants.js:/app/constants.js
+      - ./jobs:/app/jobs
+      - ./utils:/app/utils
+  atombomb-redis:
+    image: redis:5.0.5-alpine
+    container_name: atombomb-redis
+    depends_on:
+      - atombomb-db
+    networks:
+      - atombomb-network
+    ports:
+      - 6379:6379
+  atombomb-db:
+    image: postgres:10.9
+    container_name: atombomb-db
+    environment:
+      - POSTGRES_DB=atombomb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+    ports:
+      - 5432:5432
+    networks:
+      - atombomb-network
+
+networks:
+  atombomb-network:

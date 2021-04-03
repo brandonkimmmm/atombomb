@@ -42,7 +42,7 @@ const run = () => {
 			loggerCron.info('cron/task/notifyTaskDeadlineCron finished');
 		})
 		.catch((err) => {
-			loggerCron.error('cron/task/notifyTaskDeadlineCron err', err.message);
+			loggerCron.error('cron/task/notifyTaskDeadlineCron err', err.stack);
 		});
 };
 
