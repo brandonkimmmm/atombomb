@@ -106,6 +106,21 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/MessageResponse"
+  /user:
+    x-swagger-router-controller: user
+    get:
+      operationId: getUser
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
+      security:
+        - Bearer: []
   /task:
     x-swagger-router-controller: task
     get:

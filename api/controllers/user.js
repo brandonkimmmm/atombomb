@@ -62,7 +62,31 @@ const loginUser = (req, res) => {
 		});
 };
 
+const getUser = (req, res) => {
+	loggerUser.verbose(req.uuid, 'controller/user/getUser auth', req.auth);
+
+	const { email } = req.auth.sub;
+
+	findUserByEmail(
+		email,
+		{
+			raw: true,
+			attributes: {
+				exclude: ['password', 'verified', 'updatedAt']
+			}
+		}
+	)
+		.then((user) => {
+			return res.json(user);
+		})
+		.catch((err) => {
+			loggerUser.error(req.uuid, 'controller/user/getUser err', err.message);
+			return res.json({ message: err.message });
+		});
+};
+
 module.exports = {
 	signupUser,
-	loginUser
+	loginUser,
+	getUser
 };

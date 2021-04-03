@@ -7,16 +7,22 @@ const { reject } = require('bluebird');
 const { sendEmail } = require('../../mail/index');
 const { MAILTYPE } = require('../../mail/strings');
 
-const findUserByEmail = (email) => {
+const findUserByEmail = (email, opts = {}) => {
 	return User.findOne({
-		where: { email }
+		where: { email },
+		...opts
 	});
 };
 
-const findUserById = (id) => {
+const findUserById = (id, opts = {}) => {
 	return User.findOne({
-		where: { id }
+		where: { id },
+		...opts
 	});
+};
+
+const findUser = (opts = {}) => {
+	return User.findOne(opts);
 };
 
 const signupNewUser = (email, password) => {
@@ -41,6 +47,7 @@ const signupNewUser = (email, password) => {
 };
 
 module.exports = {
+	findUser,
 	findUserByEmail,
 	findUserById,
 	signupNewUser
