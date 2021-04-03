@@ -11,9 +11,20 @@ const { all } = require('bluebird');
 const getRequestToken = (req, res) => {
 	loggerTwitter.verbose(req.uuid, 'controllers/twitter/getRequestToken auth', req.auth.sub);
 
-	const { id } = req.auth.sub;
+	const { id, email } = req.auth.sub;
 
-	twitterOauth.getOAuthRequestTokenAsync()
+	Twitter.findOne({
+		where: {
+			userId: id
+		},
+		raw: true
+	})
+		.then((user) => {
+			if (user) {
+				throw new Error(`Twitter already connected for user ${email}`);
+			}
+			return twitterOauth.getOAuthRequestTokenAsync();
+		})
 		.then(([
 			oauthRequestToken,
 			oauthRequestTokenSecret,
@@ -27,13 +38,16 @@ const getRequestToken = (req, res) => {
 				oauthRequestTokenSecret,
 				id
 			});
+			loggerTwitter.info(req.uuid, 'controllers/twitter/getRequestToken oauthRequestData', oauthRequestData);
 			return all([
 				oauthRequestToken,
 				redis.hsetAsync(TWITTER_OAUTH_KEY, oauthRequestToken, oauthRequestData)
 			]);
 		})
 		.then(([ oauthRequestToken ]) => {
-			return res.redirect(`https://twitter.com/oauth/authorize?oauth_token=${oauthRequestToken}`);
+			const redirectUrl = `https://twitter.com/oauth/authorize?oauth_token=${oauthRequestToken}`;
+			loggerTwitter.info(req.uuid, 'controllers/twitter/getRequestToken oauthRequestData', redirectUrl);
+			return res.json({ redirectUrl });
 		})
 		.catch((err) => {
 			loggerTwitter.error(req.uuid, 'controllers/twitter/getRequestToken', err.message || 'Something went wrong');
@@ -65,6 +79,8 @@ const getAccessToken = (req, res) => {
 			]);
 		})
 		.then(([ id, [ oauthAccessToken, oauthAccessTokenSecret, data] ]) => {
+			loggerTwitter.info(req.uuid, 'controllers/twitter/getAccessToken verified userId', id);
+
 			return Twitter.create({
 				userId: id,
 				username: data.screen_name,

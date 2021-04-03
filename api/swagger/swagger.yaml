@@ -18,6 +18,7 @@ consumes:
 produces:
   - application/json
   - text/html
+  - text/plain
 
 securityDefinitions:
   Bearer:
@@ -310,10 +311,10 @@ paths:
       description: Connect your twitter account
       operationId: getRequestToken
       responses:
-        302:
-          description: 302 response
+        200:
+          description: Success
           schema:
-            type: string
+            type: object
         default:
           description: Error
           schema:

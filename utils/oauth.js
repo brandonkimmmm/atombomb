@@ -10,7 +10,7 @@ const twitterOauth = new OAuth.OAuth(
 	TWITTER_API_KEY,
 	TWITTER_API_SECRET,
 	'1.0A',
-	'http://127.0.0.1:10010/twitter/callback',
+	'http://127.0.0.1/twitter/callback',
 	'HMAC-SHA1'
 );
 
