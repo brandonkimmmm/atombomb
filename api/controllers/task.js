@@ -5,7 +5,8 @@ const { addBomb, removeBomb } = require('../helpers/bomb');
 const { loggerTask } = require('../../config/logger');
 const moment = require('moment');
 const { isEmail } = require('validator');
-const { Twitter } = require('../../db/models');
+const { Twitter, Task } = require('../../db/models');
+const { all } = require('bluebird');
 
 const getTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/getTask auth', req.auth);
@@ -42,32 +43,36 @@ const postTask = (req, res) => {
 		return res.status(400).json({ message: 'Deadline must be at least one hour after time of creation' });
 	}
 
+	if (notification.length > 280) {
+		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'notification too long');
+		return res.status(400).json({ message: 'Notification can be 280 characters at most' });
+	}
 
 	loggerTask.info(req.uuid, 'controllers/task/postTask body', title, deadline);
 
-	Twitter.findOne({
-		where: {
-			userId: req.auth.sub.id
-		},
-		raw: true
-	})
-		.then((twitter) => {
+	all([
+		Twitter.findOne({
+			where: {
+				userId: req.auth.sub.id
+			},
+			raw: true
+		}),
+		Task.count({
+			where: {
+				userId: req.auth.sub.id,
+				completed: false,
+				expired: false
+			}
+		})
+	])
+		.then(([ twitter, tasks ]) => {
 			if (!twitter) {
 				throw new Error('Please connect your Twitter account');
 			}
+			if (tasks > 2) {
+				throw new Error('Can only have two active tasks at a time');
+			}
 
-			return findTask({
-				where: {
-					title,
-					description,
-					deadline,
-					userId: req.auth.sub.id
-				},
-				raw: true
-			});
-		})
-		.then((task) => {
-			if (task) throw new Error('Task already exists');
 			return createTask({
 				title,
 				description,

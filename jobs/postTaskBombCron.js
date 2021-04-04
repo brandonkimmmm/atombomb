@@ -25,7 +25,11 @@ const run = () => {
 		},
 		include: {
 			model: User,
-			attributes: ['email', 'id']
+			attributes: ['email', 'id'],
+			include: {
+				model: Twitter,
+				attributes: ['accessToken', 'accessTokenSecret']
+			}
 		}
 	})
 		.then((tasks) => {
@@ -34,29 +38,20 @@ const run = () => {
 				loggerCron.info('cron/task/postTaskBombCron task id', task.id, 'userId', task.User.id);
 				each((task.bomb), async (data, method) => {
 					loggerCron.info('cron/task/postTaskBombCron bomb task id', task.id, 'method', method);
+					const twitterClient = new TwitterLib({
+						consumer_key: TWITTER_API_KEY,
+						consumer_secret: TWITTER_API_SECRET,
+						access_token_key: cryptr.decrypt(task.User.Twitter.accessToken),
+						access_token_secret: cryptr.decrypt(task.User.Twitter.accessTokenSecret)
+					});
 
-					if (method === 'twitter') {
-						const twitterAuth = await Twitter.findOne({
-							where: {
-								userId: task.User.id
-							},
-							raw: true
-						});
-
-						const twitterClient = new TwitterLib({
-							consumer_key: TWITTER_API_KEY,
-							consumer_secret: TWITTER_API_SECRET,
-							access_token_key: cryptr.decrypt(twitterAuth.accessToken),
-							access_token_secret: cryptr.decrypt(twitterAuth.accessTokenSecret)
-						});
-
-						try {
-							await twitterClient.post('statuses/update', { status: data.notification });
-							loggerCron.info('cron/task/postTaskBombCron posted', task.id, 'method', method, 'posted');
-						} catch (err) {
-							loggerCron.error('cron/task/postTaskBombCron err', task.id, method, err.message);
-						}
+					try {
+						await twitterClient.post('statuses/update', { status: data.notification });
+						loggerCron.info('cron/task/postTaskBombCron posted', task.id, 'method', method, 'posted');
+					} catch (err) {
+						loggerCron.error('cron/task/postTaskBombCron err', task.id, method, err.message);
 					}
+
 					await sleep(1000);
 				});
 				await task.update({ expired: true }, { fields: [ 'expired' ] });
