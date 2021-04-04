@@ -6,7 +6,8 @@ const { issueToken } = require('../helpers/auth');
 const { sendEmail } = require('../../mail');
 const { MAILTYPE } = require('../../mail/strings');
 const moment = require('moment');
-const { Twitter } = require('../../db/models');
+const { Twitter, Task } = require('../../db/models');
+const { all } = require('bluebird');
 
 const signupUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
@@ -92,8 +93,46 @@ const getUser = (req, res) => {
 		});
 };
 
+const getUserStats = (req, res) => {
+	loggerUser.verbose(req.uuid, 'controller/user/getUserStats', req.auth);
+
+	const { id } = req.auth.sub;
+
+	all([
+		Task.count({
+			where: {
+				userId: id
+			}
+		}),
+		Task.count({
+			where: {
+				userId: id,
+				completed: true
+			}
+		}),
+		Task.count({
+			where: {
+				userId: id,
+				expired: true
+			}
+		})
+	])
+		.then(([ total, completed, expired ]) => {
+			return res.json({
+				total,
+				completed,
+				expired
+			});
+		})
+		.catch((err) => {
+			loggerUser.error(req.uuid, 'controller/user/getUserStats', req.auth);
+			return res.json({ message: err.message });
+		});
+};
+
 module.exports = {
 	signupUser,
 	loginUser,
-	getUser
+	getUser,
+	getUserStats
 };

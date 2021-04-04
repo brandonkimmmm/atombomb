@@ -122,7 +122,7 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
-  /task:
+  /user/task:
     x-swagger-router-controller: task
     get:
       operationId: getTask
@@ -184,7 +184,7 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
-  /task/complete:
+  /user/task/complete:
     x-swagger-router-controller: task
     get:
       description: Set task as completed
@@ -206,7 +206,7 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
-  /task/bomb:
+  /user/task/bomb:
     x-swagger-router-controller: task
     post:
       description: Add new bomb for task
@@ -257,7 +257,7 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
-  /tasks:
+  /user/tasks:
     x-swagger-router-controller: task
     get:
       description: Get all tasks
@@ -273,7 +273,23 @@ paths:
             $ref: "#/definitions/MessageResponse"
       security:
         - Bearer: []
-  /task/update-deadline:
+  /user/stats:
+    x-swagger-router-controller: user
+    get:
+      description: Get user stats
+      operationId: getUserStats
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/MessageResponse"
+      security:
+        - Bearer: []
+  /user/task/update-deadline:
     x-swagger-router-controller: task
     put:
       description: Update a task deadline
