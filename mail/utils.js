@@ -37,7 +37,7 @@ const transport = nodemailer.createTransport({
 		user: SMTP_USER,
 		pass: SMTP_PASSWORD
 	},
-	logger: true,
+	logger: true
 });
 
 const sendSMTPEmail = (params) => {

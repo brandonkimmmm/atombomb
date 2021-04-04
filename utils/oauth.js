@@ -1,7 +1,7 @@
 'use strict';
 
 const OAuth = require('oauth');
-const { TWITTER_API_KEY, TWITTER_API_SECRET } = require('../constants');
+const { TWITTER_API_KEY, TWITTER_API_SECRET, API_URL } = require('../constants');
 const { promisifyAll } = require('bluebird');
 
 const twitterOauth = new OAuth.OAuth(
@@ -10,7 +10,7 @@ const twitterOauth = new OAuth.OAuth(
 	TWITTER_API_KEY,
 	TWITTER_API_SECRET,
 	'1.0A',
-	'http://127.0.0.1/twitter/callback',
+	`${API_URL}/twitter/callback`,
 	'HMAC-SHA1'
 );
 

@@ -17,14 +17,15 @@ const run = () => {
 	Task.findAll({
 		where: {
 			deadline: {
-				[Op.gte]: moment(),
-				[Op.lte]: moment().add(1, 'hours')
+				[Op.gte]: moment().seconds(0).milliseconds(0),
+				[Op.lte]: moment().seconds(0).milliseconds(0).add(1, 'minutes')
 			},
 			completed: false,
 			expired: false
 		},
 		include: {
-			model: User
+			model: User,
+			attributes: ['email', 'id']
 		}
 	})
 		.then((tasks) => {
@@ -55,18 +56,6 @@ const run = () => {
 						} catch (err) {
 							loggerCron.error('cron/task/postTaskBombCron err', task.id, method, err.message);
 						}
-					} else if (method === 'email') {
-						sendEmail(
-							MAILTYPE.BOMB,
-							task.User.email,
-							{
-								sentEmail: data.email,
-								task: task.title,
-								description: task.description,
-								message: data.notification,
-								deadline: task.deadline
-							}
-						);
 					}
 					await sleep(1000);
 				});

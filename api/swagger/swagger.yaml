@@ -379,7 +379,6 @@ definitions:
       - title
       - description
       - deadline
-      - sent_to_email
       - notification
     properties:
       title:
@@ -389,8 +388,6 @@ definitions:
       deadline:
         type: string
         format: date-time
-      sent_to_email:
-        type: string
       notification:
         type: string
   TaskObject:

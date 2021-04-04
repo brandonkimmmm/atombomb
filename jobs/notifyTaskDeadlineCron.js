@@ -13,19 +13,22 @@ const run = () => {
 	Task.findAll({
 		where: {
 			deadline: {
-				[Op.gte]: moment().add(25, 'hours'),
-				[Op.lte]: moment().add(26, 'hours')
+				[Op.gte]: moment().seconds(0).milliseconds(0).add(24, 'hours'),
+				[Op.lte]: moment().seconds(0).milliseconds(0).add(25, 'hours')
 			},
 			completed: false,
 			expired: false
 		},
+		raw: true,
+		nested: true,
 		include: {
-			model: User
+			model: User,
+			attributes: ['email', 'id']
 		}
 	})
 		.then((tasks) => {
 			loggerCron.info('cron/task/notifyTaskDeadlineCron tasks for cron job', tasks.length);
-			each(tasks, async (task) => {
+			each(tasks, (task) => {
 				loggerCron.info('cron/task/notifyTaskDeadlineCron task id', task.id, 'userId', task.User.id);
 				sendEmail(
 					MAILTYPE.NOTIFY_DEADLINE,

@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 			required: true
 		},
 		twitterId: {
-			type: DataTypes.INTEGER,
+			type: DataTypes.STRING,
 			required: true
 		}
 	}, {

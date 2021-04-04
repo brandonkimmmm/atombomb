@@ -5,6 +5,7 @@ const { addBomb, removeBomb } = require('../helpers/bomb');
 const { loggerTask } = require('../../config/logger');
 const moment = require('moment');
 const { isEmail } = require('validator');
+const { Twitter } = require('../../db/models');
 
 const getTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/getTask auth', req.auth);
@@ -34,12 +35,7 @@ const getTask = (req, res) => {
 const postTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/postTask auth', req.auth);
 
-	const { title, description, deadline, sent_to_email, notification } = req.swagger.params.data.value;
-
-	if (!isEmail(sent_to_email)) {
-		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'invalid sendToEmail', sent_to_email);
-		return res.status(400).json({ message: 'Email being sent to is not valid' });
-	}
+	const { title, description, deadline, notification } = req.swagger.params.data.value;
 
 	if (moment(deadline).isBefore(moment().add(1, 'hours'))) {
 		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'invalid deadline', deadline);
@@ -49,14 +45,27 @@ const postTask = (req, res) => {
 
 	loggerTask.info(req.uuid, 'controllers/task/postTask body', title, deadline);
 
-	findTask({
+	Twitter.findOne({
 		where: {
-			title,
-			description,
-			deadline,
 			userId: req.auth.sub.id
-		}
+		},
+		raw: true
 	})
+		.then((twitter) => {
+			if (!twitter) {
+				throw new Error('Please connect your Twitter account');
+			}
+
+			return findTask({
+				where: {
+					title,
+					description,
+					deadline,
+					userId: req.auth.sub.id
+				},
+				raw: true
+			});
+		})
 		.then((task) => {
 			if (task) throw new Error('Task already exists');
 			return createTask({
@@ -65,19 +74,18 @@ const postTask = (req, res) => {
 				deadline,
 				userId: req.auth.sub.id,
 				bomb: {
-					email: {
-						notification,
-						email: sent_to_email
+					twitter: {
+						notification
 					}
 				}
 			});
 		})
 		.then((task) => {
-			loggerTask.info(req.uuid, 'controllers/task/postTask new task', task.title, task.userId);
+			loggerTask.info(req.uuid, 'controllers/task/postTask new task', task.title, task.id);
 			return res.status(201).json(task);
 		})
 		.catch((err) => {
-			loggerTask.error(req.uuid, 'controllers/task/postTask err', err.message);
+			loggerTask.error(req.uuid, 'controllers/task/postTask err', err.stack);
 			return res.status(err.status || 400).json({ message: err.message });
 		});
 };

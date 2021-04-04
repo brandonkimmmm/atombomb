@@ -25,7 +25,7 @@ module.exports = {
 			required: true
 		},
 		twitterId: {
-			type: Sequelize.INTEGER,
+			type: Sequelize.STRING,
 			required: true
 		},
 		createdAt: {

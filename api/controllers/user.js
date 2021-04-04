@@ -6,6 +6,7 @@ const { issueToken } = require('../helpers/auth');
 const { sendEmail } = require('../../mail');
 const { MAILTYPE } = require('../../mail/strings');
 const moment = require('moment');
+const { Twitter } = require('../../db/models');
 
 const signupUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
@@ -71,8 +72,14 @@ const getUser = (req, res) => {
 		email,
 		{
 			raw: true,
+			nest: true,
+			required: false,
 			attributes: {
 				exclude: ['password', 'verified', 'updatedAt']
+			},
+			include: {
+				model: Twitter,
+				attributes: ['id']
 			}
 		}
 	)

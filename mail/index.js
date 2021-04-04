@@ -21,7 +21,7 @@ const sendEmail = (
 	switch (type) {
 		case MAILTYPE.WELCOME:
 			break;
-		case MAILTYPE.NOTIFYDEADLINE:
+		case MAILTYPE.NOTIFY_DEADLINE:
 			if (data.deadline) data.deadline = formatDate(data.deadline);
 			break;
 		case MAILTYPE.LOGIN:
@@ -57,8 +57,8 @@ const send = (params) => {
 		.then((info) => {
 			return info;
 		})
-		.catch((error) => {
-			loggerEmail.error('mail/index/sendSTMPEmail', error);
+		.catch((err) => {
+			loggerEmail.error('mail/index/sendSTMPEmail', err);
 		});
 };
 
