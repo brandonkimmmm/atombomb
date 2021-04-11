@@ -39,16 +39,16 @@ const getTask = (req, res) => {
 const postTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/postTask auth', req.auth);
 
-	const { title, description, deadline, notification } = req.swagger.params.data.value;
+	const { title, description, deadline, bomb } = req.swagger.params.data.value;
 
 	if (moment(deadline).isBefore(moment().add(1, 'hours'))) {
 		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'invalid deadline', deadline);
 		return res.status(400).json({ message: 'Deadline must be at least one hour after time of creation' });
 	}
 
-	if (notification.length > 280) {
-		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'notification too long');
-		return res.status(400).json({ message: 'Notification can be 280 characters at most' });
+	if (bomb.length > 280) {
+		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'bomb too long');
+		return res.status(400).json({ message: 'Bomb can be 280 characters at most' });
 	}
 
 	loggerTask.info(req.uuid, 'controllers/task/postTask body', title, deadline);
@@ -82,7 +82,7 @@ const postTask = (req, res) => {
 				userId: req.auth.sub.id,
 				bomb: {
 					twitter: {
-						notification
+						notification: bomb
 					}
 				}
 			});

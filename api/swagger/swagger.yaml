@@ -421,7 +421,7 @@ definitions:
       - title
       - description
       - deadline
-      - notification
+      - bomb
     properties:
       title:
         type: string
@@ -430,7 +430,7 @@ definitions:
       deadline:
         type: string
         format: date-time
-      notification:
+      bomb:
         type: string
   TaskObject:
     type: object
