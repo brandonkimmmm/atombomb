@@ -24,6 +24,7 @@ services:
     volumes:
       - ./api:/app/api
       - ./config:/app/config
+      - ./tools:/app/tools
       - ./db:/app/db
       - ./mail:/app/mail
       - ./app.js:/app/app.js
