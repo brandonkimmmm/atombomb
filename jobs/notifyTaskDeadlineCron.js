@@ -34,7 +34,7 @@ const run = () => {
 					MAILTYPE.NOTIFY_DEADLINE,
 					task.User.email,
 					{
-						task: task.title,
+						task: task.action,
 						deadline: task.deadline
 					}
 				);

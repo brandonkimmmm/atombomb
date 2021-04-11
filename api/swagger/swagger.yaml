@@ -418,12 +418,12 @@ definitions:
   PostTaskBody:
     type: object
     required:
-      - title
+      - action
       - description
       - deadline
       - bomb
     properties:
-      title:
+      action:
         type: string
       description:
         type: string
@@ -435,12 +435,12 @@ definitions:
   TaskObject:
     type: object
     required:
-      - title
+      - action
       - description
       - deadline
       - status
     properties:
-      title:
+      action:
         type: string
       description:
         type: string

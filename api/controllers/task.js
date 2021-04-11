@@ -39,7 +39,7 @@ const getTask = (req, res) => {
 const postTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/postTask auth', req.auth);
 
-	const { title, description, deadline, bomb } = req.swagger.params.data.value;
+	const { action, description, deadline, bomb } = req.swagger.params.data.value;
 
 	if (moment(deadline).isBefore(moment().add(1, 'hours'))) {
 		loggerTask.error(req.uuid, 'controllers/task/postTask err', 'invalid deadline', deadline);
@@ -51,7 +51,7 @@ const postTask = (req, res) => {
 		return res.status(400).json({ message: 'Bomb can be 280 characters at most' });
 	}
 
-	loggerTask.info(req.uuid, 'controllers/task/postTask body', title, deadline);
+	loggerTask.info(req.uuid, 'controllers/task/postTask body', action, deadline);
 
 	all([
 		Twitter.findOne({
@@ -76,7 +76,7 @@ const postTask = (req, res) => {
 			}
 
 			return createTask({
-				title,
+				action,
 				description,
 				deadline,
 				userId: req.auth.sub.id,
@@ -88,7 +88,7 @@ const postTask = (req, res) => {
 			});
 		})
 		.then((task) => {
-			loggerTask.info(req.uuid, 'controllers/task/postTask new task', task.title, task.id);
+			loggerTask.info(req.uuid, 'controllers/task/postTask new task', task.action, task.id);
 			return res.status(201).json(task);
 		})
 		.catch((err) => {
