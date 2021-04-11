@@ -8,6 +8,7 @@ const { MAILTYPE } = require('../../mail/strings');
 const moment = require('moment');
 const { Twitter, Task } = require('../../db/models');
 const { all } = require('bluebird');
+const { TASK_STATUS } = require('../../constants');
 
 const signupUser = (req, res) => {
 	const { email, password } = req.swagger.params.data.value;
@@ -101,31 +102,25 @@ const getUserStats = (req, res) => {
 	all([
 		Task.count({
 			where: {
-				userId: id
+				userId: id,
+				status: TASK_STATUS.SUCCESSFUL
 			}
 		}),
 		Task.count({
 			where: {
 				userId: id,
-				completed: true
-			}
-		}),
-		Task.count({
-			where: {
-				userId: id,
-				expired: true
+				status: TASK_STATUS.FAILED
 			}
 		})
 	])
-		.then(([ total, completed, expired ]) => {
+		.then(([ successful, failed ]) => {
 			return res.json({
-				total,
-				completed,
-				expired
+				successful,
+				failed
 			});
 		})
 		.catch((err) => {
-			loggerUser.error(req.uuid, 'controller/user/getUserStats', req.auth);
+			loggerUser.error(req.uuid, 'controller/user/getUserStats', err.message);
 			return res.json({ message: err.message });
 		});
 };

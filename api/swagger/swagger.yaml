@@ -262,6 +262,32 @@ paths:
     get:
       description: Get all tasks
       operationId: getAllTasks
+      parameters:
+        - name: limit
+          in: query
+          type: number
+          format: int32
+          required: false
+        - name: page
+          in: query
+          type: number
+          format: int32
+          required: false
+        - name: order_by
+          in: query
+          type: string
+          required: false
+        - name: order
+          in: query
+          type: string
+          required: false
+          enum: ['asc', 'desc']
+        - name: status
+          in: query
+          type: number
+          format: int32
+          required: false
+          enum: [1, 0, -1]
       responses:
         200:
           description: Success
@@ -412,6 +438,7 @@ definitions:
       - title
       - description
       - deadline
+      - status
     properties:
       title:
         type: string
@@ -420,6 +447,9 @@ definitions:
       deadline:
         type: string
         format: date-time
+      status:
+        type: number
+        format: int32
   BombObject:
     type: object
     required:

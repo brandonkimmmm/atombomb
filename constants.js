@@ -27,6 +27,12 @@ exports.CONNECTED_SOCIAL_MEDIA = [
 	'twitter'
 ];
 
+exports.TASK_STATUS = {
+	ACTIVE: 0,
+	SUCCESSFUL: 1,
+	FAILED: -1
+};
+
 exports.SENDER_EMAIL = process.env.SENDER_EMAIL || 'bkim2490@gmail.com';
 exports.SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'bkim2490@gmail.com';
 

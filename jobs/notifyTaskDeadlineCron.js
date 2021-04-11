@@ -7,6 +7,7 @@ const moment = require('moment');
 const { each } = require('lodash');
 const { sendEmail } = require('../mail');
 const { MAILTYPE } = require('../mail/strings');
+const { TASK_STATUS } = require('../constants');
 
 const run = () => {
 	loggerCron.info('cron/task/notifyTaskDeadlineCron started');
@@ -16,8 +17,7 @@ const run = () => {
 				[Op.gte]: moment().seconds(0).milliseconds(0).add(24, 'hours'),
 				[Op.lte]: moment().seconds(0).milliseconds(0).add(25, 'hours')
 			},
-			completed: false,
-			expired: false
+			status: TASK_STATUS.ACTIVE
 		},
 		raw: true,
 		nested: true,

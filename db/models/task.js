@@ -18,15 +18,10 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.INTEGER,
 			required: true
 		},
-		completed: {
-			type: DataTypes.BOOLEAN,
+		status: {
+			type: DataTypes.INTEGER,
 			required: true,
-			defaultValue: false
-		},
-		expired: {
-			type: DataTypes.BOOLEAN,
-			required: true,
-			defaultValue: false
+			defaultValue: 0
 		},
 		bomb: {
 			type: DataTypes.JSONB,

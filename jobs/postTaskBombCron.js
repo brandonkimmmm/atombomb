@@ -6,7 +6,7 @@ const { Op } = require('sequelize');
 const moment = require('moment');
 const TwitterLib = require('twitter');
 const { each } = require('lodash');
-const { TWITTER_API_SECRET, TWITTER_API_KEY } = require('../constants');
+const { TWITTER_API_SECRET, TWITTER_API_KEY, TASK_STATUS } = require('../constants');
 const { sleep } = require('../api/helpers/general');
 const { cryptr } = require('../utils/cryptr');
 const { sendEmail } = require('../mail');
@@ -20,8 +20,7 @@ const run = () => {
 				[Op.gte]: moment().seconds(0).milliseconds(0),
 				[Op.lte]: moment().seconds(0).milliseconds(0).add(1, 'minutes')
 			},
-			completed: false,
-			expired: false
+			status: TASK_STATUS.ACTIVE
 		},
 		include: {
 			model: User,
@@ -54,7 +53,7 @@ const run = () => {
 
 					await sleep(1000);
 				});
-				await task.update({ expired: true }, { fields: [ 'expired' ] });
+				await task.update({ status: TASK_STATUS.FAILED }, { fields: [ 'status' ] });
 				loggerCron.info('cron/task/postTaskBombCron task id', task.id, 'finished');
 			});
 		})

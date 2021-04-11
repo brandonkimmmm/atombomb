@@ -7,6 +7,9 @@ const moment = require('moment');
 const { isEmail } = require('validator');
 const { Twitter, Task } = require('../../db/models');
 const { all } = require('bluebird');
+const { getOrdering, getPagination } = require('../helpers/general');
+const { TASK_STATUS } = require('../../constants');
+const { isNumber } = require('lodash');
 
 const getTask = (req, res) => {
 	loggerTask.verbose(req.uuid, 'controllers/task/getTask auth', req.auth);
@@ -60,8 +63,7 @@ const postTask = (req, res) => {
 		Task.count({
 			where: {
 				userId: req.auth.sub.id,
-				completed: false,
-				expired: false
+				status: TASK_STATUS.ACTIVE
 			}
 		})
 	])
@@ -111,8 +113,7 @@ const deleteTask = (req, res) => {
 	})
 		.then((task) => {
 			if (!task) throw new Error('Task not found');
-			if (task.completed) throw new Error('Task is already completed');
-			if (task.expired) throw new Error('Task is expired');
+			if (task.status !== TASK_STATUS.ACTIVE) throw new Error('Task is already done');
 			return task.destroy();
 		})
 		.then(() => {
@@ -146,8 +147,7 @@ const updateTaskDeadline = (req, res) => {
 	})
 		.then((task) => {
 			if (!task) throw new Error('Task not found');
-			if (task.completed) throw new Error('Task is already completed');
-			if (task.expired) throw new Error('Task is expired');
+			if (task.status !== TASK_STATUS.ACTIVE) throw new Error('Task is already done');
 			let deadlineChanges = task.deadlineChanges;
 			if (deadlineChanges === 3) throw new Error('Cannot change deadline more than three times');
 			deadlineChanges++;
@@ -178,11 +178,22 @@ const getAllTasks = (req, res) => {
 
 	const { id } = req.auth.sub;
 
-	return findAllTasks({
+	const { limit, page, order_by, order, status } = req.swagger.params;
+
+	const query = {
 		where: {
 			userId: id
-		}
-	})
+		},
+		...getPagination(limit.value, page.value),
+		...getOrdering(order_by.value, order.value),
+		raw: true
+	};
+
+	if (isNumber(status.value)) {
+		query.where.status = status.value;
+	}
+
+	return findAllTasks(query)
 		.then((tasks) => {
 			loggerTask.info(req.uuid, 'controllers/task/getAllTasks count', tasks.count);
 			return res.json(tasks);
@@ -211,8 +222,7 @@ const postTaskBomb = (req, res) => {
 	})
 		.then((task) => {
 			if (!task) throw new Error('Task not found');
-			if (task.completed) throw new Error('Task is already completed');
-			if (task.expired) throw new Error('Task is expired');
+			if (task.status !== TASK_STATUS.ACTIVE) throw new Error('Task is already done');
 			return addBomb(userId, task, method, notification, opts);
 		})
 		.then((task) => {
@@ -243,8 +253,7 @@ const deleteTaskBomb = (req, res) => {
 	})
 		.then((task) => {
 			if (!task) throw new Error('Task not found');
-			if (task.completed) throw new Error('Task is already completed');
-			if (task.expired) throw new Error('Task is expired');
+			if (task.status !== TASK_STATUS.ACTIVE) throw new Error('Task is already done');
 			return removeBomb(task, method);
 		})
 		.then((task) => {
@@ -273,11 +282,10 @@ const setTaskCompleted = (req, res) => {
 	})
 		.then((task) => {
 			if (!task) throw new Error('Task not found');
-			if (task.expired) throw new Error('Task is expired');
-			if (task.completed) throw new Error('Task is already complete');
+			if (task.status !== TASK_STATUS.ACTIVE) throw new Error('Task is already done');
 			return task.update({
-				completed: true
-			}, { returning: true, fields: ['completed'] });
+				status: TASK_STATUS.SUCCESSFUL
+			}, { fields: ['status'] });
 		})
 		.then((task) => {
 			loggerTask.info(req.uuid, 'controllers/task/setTaskCompleted set as complete', id);
