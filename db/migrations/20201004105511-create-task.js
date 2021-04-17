@@ -10,50 +10,60 @@ module.exports = {
 			},
 			title: {
 				type: Sequelize.STRING,
-				required: true
+				allowNull: false
 			},
 			description: {
 				type: Sequelize.STRING,
-				required: true
+				allowNull: false
 			},
 			deadline: {
 				type: Sequelize.DATE,
-				required: true
+				allowNull: false
 			},
 			userId: {
 				type: Sequelize.INTEGER,
-				required: true
+				allowNull: false,
+				onDelete: 'CASCADE',
+				references: {
+					model: 'Users',
+					key: 'id'
+				}
 			},
 			completed: {
 				type: Sequelize.BOOLEAN,
-				required: true,
-				defaultValue: false
+				defaultValue: false,
+				allowNull: false
 			},
 			expired: {
 				type: Sequelize.BOOLEAN,
-				required: true,
-				defaultValue: false
+				defaultValue: false,
+				allowNull: false
 			},
 			bomb: {
 				type: Sequelize.JSONB,
-				defaultValue: {}
+				defaultValue: {},
+				allowNull: false
 			},
 			deadlineChanges: {
 				type: Sequelize.INTEGER,
-				required: true,
-				defaultValue: 0
+				defaultValue: 0,
+				allowNull: false
 			},
 			createdAt: {
 				allowNull: false,
-				type: Sequelize.DATE
+				type: Sequelize.DATE,
+				defaultValue: Sequelize.literal('NOW()')
 			},
 			updatedAt: {
 				allowNull: false,
-				type: Sequelize.DATE
+				type: Sequelize.DATE,
+				defaultValue: Sequelize.literal('NOW()')
 			}
+		}, {
+			timestamps: true
 		});
 	},
-	down: (queryInterface, Sequelize) => {
+	down: (queryInterface) => {
 		return queryInterface.dropTable('Tasks');
 	}
 };

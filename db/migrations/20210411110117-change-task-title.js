@@ -5,14 +5,14 @@ const COLUMN_1 = 'title';
 const COLUMN_2 = 'action';
 
 module.exports = {
-	up: (queryInterface, Sequelize) => {
+	up: (queryInterface) => {
 		return queryInterface.renameColumn(
       TABLE,
       COLUMN_1,
       COLUMN_2
     );
 	},
-	down: (queryInterface, Sequelize) => {
+	down: (queryInterface) => {
 		return queryInterface.renameColumn(
       TABLE,
       COLUMN_2,

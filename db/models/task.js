@@ -4,40 +4,64 @@ module.exports = (sequelize, DataTypes) => {
 	const Task = sequelize.define('Task', {
 		action: {
 			type:DataTypes.STRING,
-			required: true
+			allowNull: false
 		},
 		description: {
 			type: DataTypes.STRING,
-			required: true
+			allowNull: false
 		},
 		deadline: {
 			type: DataTypes.DATE,
-			required: true
+			allowNull: false
 		},
 		userId: {
 			type: DataTypes.INTEGER,
-			required: true
+			allowNull: false,
+			onDelete: 'CASCADE',
+			references: {
+				model: 'Users',
+				key: 'id'
+			}
 		},
 		status: {
 			type: DataTypes.INTEGER,
-			required: true,
+			allowNull: false,
 			defaultValue: 0
 		},
 		bomb: {
 			type: DataTypes.JSONB,
-			defaultValue: {}
+			defaultValue: {},
+			allowNull: false
 		},
 		deadlineChanges: {
 			type: DataTypes.INTEGER,
-			required: true,
+			allowNull: false,
 			defaultValue: 0
+		},
+		sponsorId: {
+			type: DataTypes.INTEGER,
+			allowNull: true,
+			references: {
+				model: 'Users',
+				key: 'id'
+			}
 		}
-	}, {});
+	}, {
+		timestamps: true
+	});
 	Task.associate = function(models) {
 		Task.belongsTo(models.User, {
-			foreignKey: 'userId'
+			foreignKey: 'userId',
+			targetKey: 'id',
+			onDelete: 'CASCADE',
+			as: 'user'
 		});
-		// associations can be defined here
+
+		Task.belongsTo(models.User, {
+			foreignKey: 'sponsorId',
+			as: 'sponsor',
+			targetKey: 'id'
+		});
 	};
 
 	return Task;

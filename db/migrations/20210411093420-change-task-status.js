@@ -35,7 +35,7 @@ module.exports = {
         ]);
       });
 	},
-	down: (queryInterface, Sequelize) => {
+	down: () => {
 		return resolve();
 	}
 };

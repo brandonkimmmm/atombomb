@@ -8,25 +8,31 @@ module.exports = (sequelize, DataTypes) => {
 	const Twitter = sequelize.define('Twitter', {
 		userId: {
 			type: DataTypes.INTEGER,
-			required: true,
+			allowNull: false,
+			onDelete: 'CASCADE',
+			references: {
+				model: 'Users',
+				key: 'id'
+			}
 		},
 		username: {
 			type: DataTypes.STRING,
-			required: true
+			allowNull: false
 		},
 		accessToken: {
 			type: DataTypes.TEXT,
-			required: true
+			allowNull: false
 		},
 		accessTokenSecret: {
 			type: DataTypes.TEXT,
-			required: true
+			allowNull: false
 		},
 		twitterId: {
 			type: DataTypes.STRING,
-			required: true
+			allowNull: false
 		}
 	}, {
+		timestamps: true,
 		hooks: {
 			beforeCreate: (twitter) => {
 				twitter.accessToken = cryptr.encrypt(twitter.accessToken);
@@ -37,7 +43,10 @@ module.exports = (sequelize, DataTypes) => {
 	Twitter.associate = function(models) {
 		// associations can be defined here
 		Twitter.belongsTo(models.User, {
-			foreignKey: 'userId'
+			foreignKey: 'userId',
+			as: 'user',
+			targeKey: 'id',
+			onDelete: 'CASCADE'
 		});
 	};
 

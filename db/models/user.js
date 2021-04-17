@@ -7,18 +7,20 @@ module.exports = (sequelize, DataTypes) => {
 	const User = sequelize.define('User', {
 		email: {
 			type: DataTypes.STRING,
-			required: true,
+			allowNull: false,
 			unique: true
 		},
 		password: {
 			type: DataTypes.STRING,
-			required: true
+			allowNull: false
 		},
 		verified: {
 			type: DataTypes.BOOLEAN,
-			defaultValue: false
+			defaultValue: false,
+			allowNull: false
 		}
 	}, {
+		timestamps: true,
 		hooks: {
 			beforeCreate: (user) => {
 				const salt = bcrypt.genSaltSync(SALT_ROUNDS);
@@ -28,8 +30,18 @@ module.exports = (sequelize, DataTypes) => {
 	});
 	User.associate = function(models) {
 		// associations can be defined here
-		User.hasMany(models.Task, { foreignKey: 'userId' });
-		User.hasOne(models.Twitter, { foreignKey: 'userId' });
+		User.hasMany(models.Task, {
+			foreignKey: 'userId',
+			as: 'tasks'
+		});
+		User.hasOne(models.Twitter, {
+			foreignKey: 'userId',
+			as: 'twitter'
+		});
+		User.hasMany(models.Task, {
+			foreignKey: 'sponsorId',
+			as: 'sponsoredTasks'
+		});
 	};
 
 	User.prototype.validPassword = (givenPassword, userPassword) => bcrypt.compare(givenPassword, userPassword);
